@@ -64,7 +64,7 @@ public class PdfGeneratorAdapter implements PDFServOut {
             // Espacio adicional
             document.add(new Paragraph("\n"));
 
-            // Agregar datos adicionales
+            // Agregar datos adicionales como secciones separadas
             Font sectionFont = new Font(Font.HELVETICA, 12, Font.BOLD);
             Font textFont = new Font(Font.HELVETICA, 12, Font.NORMAL);
 
@@ -93,6 +93,9 @@ public class PdfGeneratorAdapter implements PDFServOut {
         }
     }
 
+    /**
+     * Método auxiliar para agregar secciones de datos al PDF.
+     */
     private void addDataSection(Document document, String label, String value, Font labelFont, Font valueFont) throws DocumentException {
         if (value != null && !value.isEmpty()) {
             Paragraph paragraph = new Paragraph();
