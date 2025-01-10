@@ -25,6 +25,13 @@ public class GeneratePdfService implements PDFServIn {
         // Definir la ruta del archivo basado en el título
         String filePath = "output/" + request.getTitle().replaceAll("\\s+", "_") + ".pdf";
 
-        pdfServOut.createPdf(request.getContent(), filePath);
+        // Pasar todos los valores al adaptador
+        pdfServOut.createPdf(
+                request.getContent(),
+                filePath,
+                request.getTitle(),
+                request.getFooter(),
+                request.getImageUrl()
+        );
     }
 }
