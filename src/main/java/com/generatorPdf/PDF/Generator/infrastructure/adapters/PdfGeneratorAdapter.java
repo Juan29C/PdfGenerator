@@ -48,19 +48,31 @@ public class PdfGeneratorAdapter implements PDFServOut {
             // Agregar imagen desde URL
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 try {
-                    // Descargar la imagen directamente como InputStream
+                    // Descargar la imagen
                     URL url = new URL(imageUrl);
-                    try (InputStream in = url.openStream()) {
-                        // Crear la imagen directamente desde el InputStream
-                        Image qrImage = Image.getInstance(in.readAllBytes());
-                        qrImage.setAlignment(Element.ALIGN_CENTER); // Centrar la imagen
-                        qrImage.scaleToFit(150, 150); // Ajustar tamaño
-                        document.add(qrImage);
+                    String tempImagePath = "temp_image.jpg"; // Ruta temporal para guardar la imagen
+                    try (InputStream in = url.openStream();
+                         FileOutputStream out = new FileOutputStream(tempImagePath)) {
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        while ((bytesRead = in.read(buffer)) != -1) {
+                            out.write(buffer, 0, bytesRead);
+                        }
                     }
+
+                    // Cargar la imagen descargada
+                    Image qrImage = Image.getInstance(tempImagePath);
+                    qrImage.setAlignment(Element.ALIGN_CENTER); // Centrar la imagen
+                    qrImage.scaleToFit(150, 150); // Ajustar tamaño
+                    document.add(qrImage);
+
+                    // Eliminar la imagen temporal después de usarla
+                    new File(tempImagePath).delete();
                 } catch (Exception e) {
                     System.err.println("Error al cargar la imagen desde la URL: " + e.getMessage());
                 }
             }
+
 
 
             // Pie de página
