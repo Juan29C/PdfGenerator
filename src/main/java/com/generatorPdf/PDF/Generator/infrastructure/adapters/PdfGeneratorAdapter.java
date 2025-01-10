@@ -1,21 +1,20 @@
 package com.generatorPdf.PDF.Generator.infrastructure.adapters;
 
+import com.generatorPdf.PDF.Generator.domain.aggregates.dto.PdfRequest;
 import com.generatorPdf.PDF.Generator.domain.ports.out.PDFServOut;
 import com.lowagie.text.*;
-import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.PdfWriter;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.net.URL;
 
 @Component
 public class PdfGeneratorAdapter implements PDFServOut {
 
     @Override
-    public void createPdf(String content, String filePath, String title, String footer, String imageUrl) {
+    public void createPdf(PdfRequest request, String filePath) {
         try {
             // Crear el directorio si no existe
             File file = new File(filePath);
@@ -23,63 +22,69 @@ public class PdfGeneratorAdapter implements PDFServOut {
 
             // Crear el documento PDF
             Document document = new Document(PageSize.A4);
-            FileOutputStream fos = new FileOutputStream(filePath);
-
-            // Inicializar el escritor de PDF
-            PdfWriter.getInstance(document, fos);
-
-            // Abrir el documento
+            PdfWriter.getInstance(document, new FileOutputStream(filePath));
             document.open();
 
             // Título principal
-            Font titleFont = new Font(Font.HELVETICA, 18, Font.BOLD);
-            Paragraph titleParagraph = new Paragraph(title, titleFont);
-            titleParagraph.setAlignment(Element.ALIGN_CENTER);
-            document.add(titleParagraph);
+            Font titleFont = new Font(Font.HELVETICA, 16, Font.BOLD);
+            Paragraph title = new Paragraph(request.getTitle(), titleFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+
+            // Subtítulo
+            if (request.getSubtitle() != null && !request.getSubtitle().isEmpty()) {
+                Font subtitleFont = new Font(Font.HELVETICA, 12, Font.ITALIC);
+                Paragraph subtitle = new Paragraph(request.getSubtitle(), subtitleFont);
+                subtitle.setAlignment(Element.ALIGN_CENTER);
+                document.add(subtitle);
+            }
 
             // Espacio
             document.add(new Paragraph("\n"));
 
-            // Contenido
-            Font contentFont = new Font(Font.HELVETICA, 12, Font.NORMAL);
-            Paragraph body = new Paragraph(content, contentFont);
-            document.add(body);
-
-            // Agregar imagen desde URL
-            if (imageUrl != null && !imageUrl.isEmpty()) {
+            // Imagen en la parte superior derecha
+            if (request.getImageUrl() != null && !request.getImageUrl().isEmpty()) {
                 try {
-                    // Descargar la imagen
-                    URL url = new URL(imageUrl);
-                    String tempImagePath = "temp_image.jpg"; // Ruta temporal para guardar la imagen
-                    try (InputStream in = url.openStream();
-                         FileOutputStream out = new FileOutputStream(tempImagePath)) {
-                        byte[] buffer = new byte[1024];
-                        int bytesRead;
-                        while ((bytesRead = in.read(buffer)) != -1) {
-                            out.write(buffer, 0, bytesRead);
-                        }
-                    }
-
-                    // Cargar la imagen descargada
-                    Image qrImage = Image.getInstance(tempImagePath);
-                    qrImage.setAlignment(Element.ALIGN_CENTER); // Centrar la imagen
-                    qrImage.scaleToFit(150, 150); // Ajustar tamaño
-                    document.add(qrImage);
-
-                    // Eliminar la imagen temporal después de usarla
-                    new File(tempImagePath).delete();
+                    URL url = new URL(request.getImageUrl());
+                    Image image = Image.getInstance(url);
+                    image.setAbsolutePosition(450, 750); // Ajustar posición de la imagen
+                    image.scaleToFit(100, 100); // Escalar imagen
+                    document.add(image);
                 } catch (Exception e) {
-                    System.err.println("Error al cargar la imagen desde la URL: " + e.getMessage());
+                    System.err.println("Error al cargar la imagen: " + e.getMessage());
                 }
             }
 
+            // Contenido principal
+            Font contentFont = new Font(Font.HELVETICA, 12, Font.NORMAL);
+            Paragraph content = new Paragraph(request.getContent(), contentFont);
+            content.setAlignment(Element.ALIGN_JUSTIFIED);
+            document.add(content);
 
+            // Espacio adicional
+            document.add(new Paragraph("\n"));
+
+            // Agregar datos adicionales
+            Font sectionFont = new Font(Font.HELVETICA, 12, Font.BOLD);
+            Font textFont = new Font(Font.HELVETICA, 12, Font.NORMAL);
+
+            addDataSection(document, "Expediente Nº:", request.getExpediente(), sectionFont, textFont);
+            addDataSection(document, "Resolución Nº:", request.getResolucion(), sectionFont, textFont);
+            addDataSection(document, "Licencia Nº:", request.getLicencia(), sectionFont, textFont);
+            addDataSection(document, "Nivel de Riesgo:", request.getNivelRiesgo(), sectionFont, textFont);
+            addDataSection(document, "Titular:", request.getTitular(), sectionFont, textFont);
+            addDataSection(document, "RUC Nº:", request.getRuc(), sectionFont, textFont);
+            addDataSection(document, "Zonificación:", request.getZonificacion(), sectionFont, textFont);
+            addDataSection(document, "Nombre Comercial:", request.getComercial(), sectionFont, textFont);
+            addDataSection(document, "Giro:", request.getGiro(), sectionFont, textFont);
+            addDataSection(document, "Ubicación:", request.getUbicacion(), sectionFont, textFont);
+            addDataSection(document, "Horario de Atención:", request.getHorario(), sectionFont, textFont);
 
             // Pie de página
             Font footerFont = new Font(Font.HELVETICA, 10, Font.ITALIC);
-            Paragraph footerParagraph = new Paragraph(footer, footerFont);
-            footerParagraph.setAlignment(Element.ALIGN_CENTER);
-            document.add(footerParagraph);
+            Paragraph footer = new Paragraph(request.getFooter(), footerFont);
+            footer.setAlignment(Element.ALIGN_CENTER);
+            document.add(footer);
 
             // Cerrar el documento
             document.close();
@@ -87,5 +92,17 @@ public class PdfGeneratorAdapter implements PDFServOut {
             throw new RuntimeException("Error al generar el PDF", e);
         }
     }
+
+    private void addDataSection(Document document, String label, String value, Font labelFont, Font valueFont) throws DocumentException {
+        if (value != null && !value.isEmpty()) {
+            Paragraph paragraph = new Paragraph();
+            paragraph.add(new Chunk(label, labelFont));
+            paragraph.add(new Chunk(" " + value, valueFont));
+            paragraph.setSpacingBefore(5);
+            paragraph.setSpacingAfter(5);
+            document.add(paragraph);
+        }
+    }
 }
+
 

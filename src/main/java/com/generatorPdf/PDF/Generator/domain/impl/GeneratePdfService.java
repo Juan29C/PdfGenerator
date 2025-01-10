@@ -1,5 +1,4 @@
 package com.generatorPdf.PDF.Generator.domain.impl;
-
 import com.generatorPdf.PDF.Generator.domain.aggregates.dto.PdfRequest;
 import com.generatorPdf.PDF.Generator.domain.ports.in.PDFServIn;
 import com.generatorPdf.PDF.Generator.domain.ports.out.PDFServOut;
@@ -15,6 +14,7 @@ public class GeneratePdfService implements PDFServIn {
 
     @Override
     public void generatePdf(PdfRequest request) {
+        // Validaciones básicas
         if (request.getContent() == null || request.getContent().isEmpty()) {
             throw new IllegalArgumentException("El contenido no puede estar vacío");
         }
@@ -26,12 +26,7 @@ public class GeneratePdfService implements PDFServIn {
         String filePath = "output/" + request.getTitle().replaceAll("\\s+", "_") + ".pdf";
 
         // Pasar todos los valores al adaptador
-        pdfServOut.createPdf(
-                request.getContent(),
-                filePath,
-                request.getTitle(),
-                request.getFooter(),
-                request.getImageUrl()
-        );
+        pdfServOut.createPdf(request, filePath);
     }
 }
+
