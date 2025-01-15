@@ -1,11 +1,6 @@
 package com.generatorPdf.PDF.Generator.domain.aggregates.dto;
 
 public class PdfRequest {
-    private String title;
-    private String subtitle;
-    private String content;
-    private String footer;
-    private String imageUrl;
     private String expediente;
     private String resolucion;
     private String licencia;
@@ -13,53 +8,18 @@ public class PdfRequest {
     private String titular;
     private String ruc;
     private String zonificacion;
-    private String comercial;
+    private String nombreComercial;
     private String giro;
+    private String actividadComercial;
     private String ubicacion;
-    private String horario;
+    private String areaComercial;
+    private String horarioAtencionInicio;
+    private String horarioAtencionFin;
+    private String textoLimites;
+    private String fechaGeneracion;
+    private String logoLocalPath;
+    private String qrCodeUrl;
 
-    // Getters y Setters
-
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getFooter() {
-        return footer;
-    }
-
-    public void setFooter(String footer) {
-        this.footer = footer;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 
     public String getExpediente() {
         return expediente;
@@ -117,12 +77,12 @@ public class PdfRequest {
         this.zonificacion = zonificacion;
     }
 
-    public String getComercial() {
-        return comercial;
+    public String getNombreComercial() {
+        return nombreComercial;
     }
 
-    public void setComercial(String comercial) {
-        this.comercial = comercial;
+    public void setNombreComercial(String nombreComercial) {
+        this.nombreComercial = nombreComercial;
     }
 
     public String getGiro() {
@@ -133,6 +93,14 @@ public class PdfRequest {
         this.giro = giro;
     }
 
+    public String getActividadComercial() {
+        return actividadComercial;
+    }
+
+    public void setActividadComercial(String actividadComercial) {
+        this.actividadComercial = actividadComercial;
+    }
+
     public String getUbicacion() {
         return ubicacion;
     }
@@ -141,12 +109,60 @@ public class PdfRequest {
         this.ubicacion = ubicacion;
     }
 
-    public String getHorario() {
-        return horario;
+    public String getAreaComercial() {
+        return areaComercial;
     }
 
-    public void setHorario(String horario) {
-        this.horario = horario;
+    public void setAreaComercial(String areaComercial) {
+        this.areaComercial = areaComercial;
+    }
+
+    public String getHorarioAtencionInicio() {
+        return horarioAtencionInicio;
+    }
+
+    public void setHorarioAtencionInicio(String horarioAtencionInicio) {
+        this.horarioAtencionInicio = horarioAtencionInicio;
+    }
+
+    public String getHorarioAtencionFin() {
+        return horarioAtencionFin;
+    }
+
+    public void setHorarioAtencionFin(String horarioAtencionFin) {
+        this.horarioAtencionFin = horarioAtencionFin;
+    }
+
+    public String getTextoLimites() {
+        return textoLimites;
+    }
+
+    public void setTextoLimites(String textoLimites) {
+        this.textoLimites = textoLimites;
+    }
+
+    public String getFechaGeneracion() {
+        return fechaGeneracion;
+    }
+
+    public void setFechaGeneracion(String fechaGeneracion) {
+        this.fechaGeneracion = fechaGeneracion;
+    }
+
+    public String getLogoLocalPath() {
+        return logoLocalPath;
+    }
+
+    public void setLogoLocalPath(String logoLocalPath) {
+        this.logoLocalPath = logoLocalPath;
+    }
+
+    public String getQrCodeUrl() {
+        return qrCodeUrl;
+    }
+
+    public void setQrCodeUrl(String qrCodeUrl) {
+        this.qrCodeUrl = qrCodeUrl;
     }
 }
 

@@ -30,7 +30,7 @@ public class GeneratePdfController {
             pdfServIn.generatePdf(request);
 
             // Ruta del archivo generado
-            String filePath = "output/" + request.getTitle().replaceAll("\\s+", "_") + ".pdf";
+            String filePath = "output/" + request.getTitular().replaceAll("\\s+", "_") + ".pdf";
             File file = new File(filePath);
 
             // Configurar la respuesta HTTP para la descarga
