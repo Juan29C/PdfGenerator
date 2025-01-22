@@ -19,6 +19,26 @@ public class PdfRequest {
     private String fechaGeneracion;
     private String logoLocalPath;
     private String qrCodeUrl;
+    private String footerImagePath;
+    private String BackgroundImagePath;
+
+
+    public String getBackgroundImagePath() {
+        return BackgroundImagePath;
+    }
+
+    public void setBackgroundImagePath(String backgroundImagePath) {
+        BackgroundImagePath = backgroundImagePath;
+    }
+
+    // Getters y setters
+    public String getFooterImagePath() {
+        return footerImagePath;
+    }
+
+    public void setFooterImagePath(String footerImagePath) {
+        this.footerImagePath = footerImagePath;
+    }
 
 
     public String getExpediente() {
