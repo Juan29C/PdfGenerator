@@ -58,7 +58,7 @@ public class PdfGeneratorAdapter implements PDFServOut {
             background.setAbsolutePosition(xPosition, yPosition); // Posicionar la imagen
 
             // Configurar la opacidad de la imagen (por ejemplo, 5% de opacidad)
-            float opacity = 0.05f; // Transparencia del 5% (valor entre 0 y 1)
+            float opacity = 0.08f; // Transparencia del 5% (valor entre 0 y 1)
 
             // Aplicar la transparencia
             PdfContentByte canvas = writer.getDirectContentUnder();
@@ -70,8 +70,6 @@ public class PdfGeneratorAdapter implements PDFServOut {
             System.err.println("Error al cargar la imagen de fondo: " + e.getMessage());
         }
     }
-
-
 
     private void addHeader(Document document, PdfWriter writer, PdfRequest request) throws Exception {
         // Crear una tabla con tres columnas (centrada y alineada a la derecha)
@@ -115,7 +113,6 @@ public class PdfGeneratorAdapter implements PDFServOut {
         // Agregar la tabla al documento
         document.add(headerTable);
     }
-
 
     private void addContent(Document document, PdfRequest request) throws DocumentException {
         Font titleFont = FontFactory.getFont(FontFactory.HELVETICA, 16, Font.BOLD);
@@ -208,8 +205,19 @@ public class PdfGeneratorAdapter implements PDFServOut {
         if (isFirstBlock) {
             addRowToTable(table, "Expediente Nº", ":", request.getExpediente(), labelFont, valueFont);
             addRowToTable(table, "Resolución Nº", ":", request.getResolucion(), labelFont, valueFont);
-            addRowToTable(table, "Licencia Nº", ":", request.getLicencia(), labelFont, valueFont);
-            addRowToTable(table, "Nivel de Riesgo", ":", request.getNivelRiesgo(), labelFont, valueFont);
+
+            // Combinar Licencia Nro. y Nivel de Riesgo en la misma fila
+            PdfPCell labelCell = new PdfPCell(new Phrase("Licencia Nº", labelFont));
+            labelCell.setBorder(Rectangle.NO_BORDER);
+            table.addCell(labelCell);
+
+            PdfPCell separatorCell = new PdfPCell(new Phrase(":", labelFont));
+            separatorCell.setBorder(Rectangle.NO_BORDER);
+            table.addCell(separatorCell);
+
+            PdfPCell combinedValueCell = new PdfPCell(new Phrase(request.getLicencia() + "    Nivel de Riesgo : " + request.getNivelRiesgo(), valueFont));
+            combinedValueCell.setBorder(Rectangle.NO_BORDER);
+            table.addCell(combinedValueCell);
         } else {
             addRowToTable(table, "Titular", ":", request.getTitular(), labelFont, valueFont);
             addRowToTable(table, "RUC Nº", ":", request.getRuc(), labelFont, valueFont);
@@ -218,8 +226,19 @@ public class PdfGeneratorAdapter implements PDFServOut {
             addRowToTable(table, "Giro", ":", request.getGiro(), labelFont, valueFont);
             addRowToTable(table, "Actividad Comercial", ":", request.getActividadComercial(), labelFont, valueFont);
             addRowToTable(table, "Ubicado en", ":", request.getUbicacion(), labelFont, valueFont);
-            addRowToTable(table, "Area comercial", ":", request.getAreaComercial(), labelFont, valueFont);
-            addRowToTable(table, "Horario de Atención", ":", request.getHorarioAtencionInicio() + " a " + request.getHorarioAtencionFin(), labelFont, valueFont);
+
+            // Combinar Área Comercial y Horario de Atención en la misma fila
+            PdfPCell labelCell = new PdfPCell(new Phrase("Área Comercial", labelFont));
+            labelCell.setBorder(Rectangle.NO_BORDER);
+            table.addCell(labelCell);
+
+            PdfPCell separatorCell = new PdfPCell(new Phrase(":", labelFont));
+            separatorCell.setBorder(Rectangle.NO_BORDER);
+            table.addCell(separatorCell);
+
+            PdfPCell combinedValueCell = new PdfPCell(new Phrase(request.getAreaComercial() + "    Horario de Atención : " + request.getHorarioAtencionInicio() + " a " + request.getHorarioAtencionFin(), valueFont));
+            combinedValueCell.setBorder(Rectangle.NO_BORDER);
+            table.addCell(combinedValueCell);
         }
 
         return table;
