@@ -5,6 +5,7 @@ public class PdfRequest {
     private String resolucion;
     private String licencia;
     private String nivelRiesgo;
+    private String textoCumplimiento;
     private String titular;
     private String ruc;
     private String zonificacion;
@@ -29,6 +30,14 @@ public class PdfRequest {
 
     public void setBackgroundImagePath(String backgroundImagePath) {
         BackgroundImagePath = backgroundImagePath;
+    }
+
+    public String getTextoCumplimiento() {
+        return textoCumplimiento;
+    }
+
+    public void setTextoCumplimiento(String textoCumplimiento) {
+        this.textoCumplimiento = textoCumplimiento;
     }
 
     // Getters y setters

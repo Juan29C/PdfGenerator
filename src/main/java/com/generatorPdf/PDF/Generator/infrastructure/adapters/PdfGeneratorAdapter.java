@@ -71,6 +71,8 @@ public class PdfGeneratorAdapter implements PDFServOut {
         }
     }
 
+
+
     private void addHeader(Document document, PdfWriter writer, PdfRequest request) throws Exception {
         // Crear una tabla con tres columnas (centrada y alineada a la derecha)
         PdfPTable headerTable = new PdfPTable(3); // Tres columnas: izquierda, centro, derecha
@@ -114,8 +116,10 @@ public class PdfGeneratorAdapter implements PDFServOut {
         document.add(headerTable);
     }
 
+
     private void addContent(Document document, PdfRequest request) throws DocumentException {
         Font titleFont = FontFactory.getFont(FontFactory.HELVETICA, 16, Font.BOLD);
+        Font titleFontMax = FontFactory.getFont(FontFactory.HELVETICA, 18, Font.BOLD);
         Font subTitleFont = FontFactory.getFont(FontFactory.HELVETICA, 12, Font.NORMAL);
         Font labelFont = FontFactory.getFont(FontFactory.TIMES_ROMAN, 10.5f, Font.BOLD);
         Font valueFont = FontFactory.getFont(FontFactory.TIMES_ROMAN, 10.5f, Font.NORMAL);
@@ -128,17 +132,28 @@ public class PdfGeneratorAdapter implements PDFServOut {
 
         Paragraph subtitle = new Paragraph("Sub Gerencia de Comercio, Licencias y Promoción Empresarial", subTitleFont);
         subtitle.setAlignment(Element.ALIGN_CENTER);
-        subtitle.setSpacingAfter(20);
+        subtitle.setSpacingAfter(5);
         document.add(subtitle);
 
         // Bloques de datos
         PdfPTable firstBlock = createDataTable(request, true, labelFont, valueFont);
         document.add(firstBlock);
 
-        Paragraph licenseTitle = new Paragraph("LICENCIA DE FUNCIONAMIENTO INDETERMINADA", titleFont);
+
+        // Texto de cumplimiento
+        Paragraph realized = new Paragraph(request.getTextoCumplimiento(), valueFont);
+        realized.setLeading(0, 1.15f);
+        realized.setSpacingBefore(5);
+        realized.setSpacingAfter(5);
+        realized.setAlignment(Element.ALIGN_JUSTIFIED);
+        document.add(realized);
+
+
+        Paragraph licenseTitle = new Paragraph("LICENCIA DE FUNCIONAMIENTO \n INDETERMINADA", titleFontMax);
+        licenseTitle.setLeading(0, 1.15f);
         licenseTitle.setAlignment(Element.ALIGN_CENTER);
-        licenseTitle.setSpacingBefore(20);
-        licenseTitle.setSpacingAfter(20);
+        licenseTitle.setSpacingBefore(0);
+        licenseTitle.setSpacingAfter(5);
         document.add(licenseTitle);
 
         PdfPTable secondBlock = createDataTable(request, false, labelFont, valueFont);
@@ -146,7 +161,8 @@ public class PdfGeneratorAdapter implements PDFServOut {
 
         // Texto de límites
         Paragraph limits = new Paragraph(request.getTextoLimites(), valueFont);
-        limits.setSpacingBefore(10);
+        limits.setLeading(0, 1.15f);
+        limits.setSpacingBefore(8);
         limits.setSpacingAfter(20);
         limits.setAlignment(Element.ALIGN_JUSTIFIED);
         document.add(limits);
@@ -154,13 +170,13 @@ public class PdfGeneratorAdapter implements PDFServOut {
         // Fecha
         Paragraph date = new Paragraph("Nuevo Chimbote, " + request.getFechaGeneracion(), valueFont);
         date.setAlignment(Element.ALIGN_RIGHT);
-        date.setSpacingAfter(30);
+        date.setSpacingAfter(20);
         document.add(date);
 
         // Firmas
         PdfPTable signatureTable = new PdfPTable(2);
         signatureTable.setWidthPercentage(100);
-        signatureTable.setSpacingBefore(40);
+        signatureTable.setSpacingBefore(30);
 
         PdfPCell gerenteCell = new PdfPCell(new Phrase("_____________________________\nFirma Gerente", valueFont));
         gerenteCell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -197,52 +213,134 @@ public class PdfGeneratorAdapter implements PDFServOut {
 
 
     private PdfPTable createDataTable(PdfRequest request, boolean isFirstBlock, Font labelFont, Font valueFont) throws DocumentException {
-        PdfPTable table = new PdfPTable(3);
+        PdfPTable table = new PdfPTable(3); // Tabla con 3 columnas como base
         table.setWidthPercentage(100);
         table.setSpacingBefore(10);
-        table.setWidths(new float[]{3, 0.3f, 6});
+        table.setWidths(new float[]{1.7f, 0.3f, 6}); // Proporciones de las columnas principales
+
+        // Interlineado entre filas
+        float rowSpacing = 10f;
 
         if (isFirstBlock) {
-            addRowToTable(table, "Expediente Nº", ":", request.getExpediente(), labelFont, valueFont);
-            addRowToTable(table, "Resolución Nº", ":", request.getResolucion(), labelFont, valueFont);
+            // Filas del bloque 1
+            addRowToTableWithSpacing(table, "Expediente Nº", ":", request.getExpediente(), labelFont, valueFont, rowSpacing);
+            addRowToTableWithSpacing(table, "Resolución Nº", ":", request.getResolucion(), labelFont, valueFont, rowSpacing);
 
-            // Combinar Licencia Nro. y Nivel de Riesgo en la misma fila
+            // Combinar "Licencia Nº" y "Nivel de Riesgo" en una fila (cambiar a 4 columnas)
+            PdfPTable tempTable = new PdfPTable(4); // Tabla temporal con 4 columnas
+            tempTable.setWidthPercentage(100);
+            tempTable.setWidths(new float[]{2, 0.5f, 3, 4}); // Proporciones específicas
+
+            // Columna 1: "Licencia Nº"
             PdfPCell labelCell = new PdfPCell(new Phrase("Licencia Nº", labelFont));
             labelCell.setBorder(Rectangle.NO_BORDER);
-            table.addCell(labelCell);
+            labelCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            tempTable.addCell(labelCell);
 
+            // Columna 2: ":"
             PdfPCell separatorCell = new PdfPCell(new Phrase(":", labelFont));
             separatorCell.setBorder(Rectangle.NO_BORDER);
-            table.addCell(separatorCell);
+            separatorCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            tempTable.addCell(separatorCell);
 
-            PdfPCell combinedValueCell = new PdfPCell(new Phrase(request.getLicencia() + "    Nivel de Riesgo : " + request.getNivelRiesgo(), valueFont));
-            combinedValueCell.setBorder(Rectangle.NO_BORDER);
-            table.addCell(combinedValueCell);
+            // Columna 3: Valor de Licencia
+            PdfPCell licenciaValueCell = new PdfPCell(new Phrase(request.getLicencia(), valueFont));
+            licenciaValueCell.setBorder(Rectangle.NO_BORDER);
+            licenciaValueCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            tempTable.addCell(licenciaValueCell);
+
+            // Columna 4: "Nivel de Riesgo: Alto"
+            Phrase riesgoPhrase = new Phrase();
+            riesgoPhrase.add(new Chunk("Nivel de Riesgo: ", labelFont));
+            riesgoPhrase.add(new Chunk(request.getNivelRiesgo(), valueFont));
+
+            PdfPCell riesgoCell = new PdfPCell(riesgoPhrase);
+            riesgoCell.setBorder(Rectangle.NO_BORDER);
+            riesgoCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            tempTable.addCell(riesgoCell);
+
+            // Añadir la fila combinada a la tabla principal
+            PdfPCell mergedCell = new PdfPCell(tempTable);
+            mergedCell.setBorder(Rectangle.NO_BORDER);
+            mergedCell.setColspan(3); // Ocupa todo el ancho de la tabla principal
+            table.addCell(mergedCell);
+
         } else {
-            addRowToTable(table, "Titular", ":", request.getTitular(), labelFont, valueFont);
-            addRowToTable(table, "RUC Nº", ":", request.getRuc(), labelFont, valueFont);
-            addRowToTable(table, "Zonificación", ":", request.getZonificacion(), labelFont, valueFont);
-            addRowToTable(table, "Nombre Comercial", ":", request.getNombreComercial(), labelFont, valueFont);
-            addRowToTable(table, "Giro", ":", request.getGiro(), labelFont, valueFont);
-            addRowToTable(table, "Actividad Comercial", ":", request.getActividadComercial(), labelFont, valueFont);
-            addRowToTable(table, "Ubicado en", ":", request.getUbicacion(), labelFont, valueFont);
+            // Filas del bloque 2
+            addRowToTableWithSpacing(table, "Titular", ":", request.getTitular(), labelFont, valueFont, rowSpacing);
+            addRowToTableWithSpacing(table, "RUC Nº", ":", request.getRuc(), labelFont, valueFont, rowSpacing);
+            addRowToTableWithSpacing(table, "Zonificación", ":", request.getZonificacion(), labelFont, valueFont, rowSpacing);
+            addRowToTableWithSpacing(table, "Nombre Comercial", ":", request.getNombreComercial(), labelFont, valueFont, rowSpacing);
+            addRowToTableWithSpacing(table, "Giro", ":", request.getGiro(), labelFont, valueFont, rowSpacing);
+            addRowToTableWithSpacing(table, "Actividad Comercial", ":", request.getActividadComercial(), labelFont, valueFont, rowSpacing);
+            addRowToTableWithSpacing(table, "Ubicado en", ":", request.getUbicacion(), labelFont, valueFont, rowSpacing);
 
-            // Combinar Área Comercial y Horario de Atención en la misma fila
+            // Combinar "Área Comercial" y "Horario de Atención" en una fila (cambiar a 4 columnas)
+            PdfPTable tempTable = new PdfPTable(4); // Tabla temporal con 4 columnas
+            tempTable.setWidthPercentage(100);
+            tempTable.setWidths(new float[]{2, 0.5f, 3, 4}); // Proporciones específicas
+
+            // Columna 1: "Área Comercial"
             PdfPCell labelCell = new PdfPCell(new Phrase("Área Comercial", labelFont));
             labelCell.setBorder(Rectangle.NO_BORDER);
-            table.addCell(labelCell);
+            labelCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            tempTable.addCell(labelCell);
 
+            // Columna 2: ":"
             PdfPCell separatorCell = new PdfPCell(new Phrase(":", labelFont));
             separatorCell.setBorder(Rectangle.NO_BORDER);
-            table.addCell(separatorCell);
+            separatorCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            tempTable.addCell(separatorCell);
 
-            PdfPCell combinedValueCell = new PdfPCell(new Phrase(request.getAreaComercial() + "    Horario de Atención : " + request.getHorarioAtencionInicio() + " a " + request.getHorarioAtencionFin(), valueFont));
-            combinedValueCell.setBorder(Rectangle.NO_BORDER);
-            table.addCell(combinedValueCell);
+            // Columna 3: Valor de Área Comercial
+            PdfPCell areaValueCell = new PdfPCell(new Phrase(request.getAreaComercial(), valueFont));
+            areaValueCell.setBorder(Rectangle.NO_BORDER);
+            areaValueCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            tempTable.addCell(areaValueCell);
+
+            // Columna 4: "Horario de Atención"
+            Phrase horarioPhrase = new Phrase();
+            horarioPhrase.add(new Chunk("Horario de Atención: ", labelFont));
+            horarioPhrase.add(new Chunk(request.getHorarioAtencionInicio() + " a " + request.getHorarioAtencionFin(), valueFont));
+
+            PdfPCell horarioCell = new PdfPCell(horarioPhrase);
+            horarioCell.setBorder(Rectangle.NO_BORDER);
+            horarioCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            tempTable.addCell(horarioCell);
+
+            // Añadir la fila combinada a la tabla principal
+            PdfPCell mergedCell = new PdfPCell(tempTable);
+            mergedCell.setBorder(Rectangle.NO_BORDER);
+            mergedCell.setColspan(3); // Ocupa todo el ancho de la tabla principal
+            table.addCell(mergedCell);
         }
 
         return table;
     }
+
+
+    // Nueva función auxiliar para agregar filas con interlineado
+    private void addRowToTableWithSpacing(PdfPTable table, String label, String separator, String value, Font labelFont, Font valueFont, float spacingAfter) {
+        PdfPCell labelCell = new PdfPCell(new Phrase(label, labelFont));
+        labelCell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(labelCell);
+
+        PdfPCell separatorCell = new PdfPCell(new Phrase(separator, labelFont));
+        separatorCell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(separatorCell);
+
+        PdfPCell valueCell = new PdfPCell(new Phrase(value, valueFont));
+        valueCell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(valueCell);
+
+        // Agregar espacio entre filas
+        PdfPCell spacingCell = new PdfPCell();
+        spacingCell.setBorder(Rectangle.NO_BORDER);
+        spacingCell.setColspan(3);
+        spacingCell.setFixedHeight(spacingAfter);
+        table.addCell(spacingCell);
+    }
+
 
     private void addRowToTable(PdfPTable table, String label, String separator, String value, Font labelFont, Font valueFont) {
         PdfPCell labelCell = new PdfPCell(new Phrase(label, labelFont));
