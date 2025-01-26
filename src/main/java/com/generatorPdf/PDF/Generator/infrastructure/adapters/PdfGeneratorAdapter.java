@@ -194,7 +194,7 @@ public class PdfGeneratorAdapter implements PDFServOut {
     private void addFooter(PdfWriter writer, PdfRequest request) {
         try {
             // Cargar la imagen del pie de página desde la ruta proporcionada
-            Image footerImage = Image.getInstance(request.getFooterImagePath());
+            Image footerImage = Image.getInstance("imagen/pie_pagina.png");
 
             // Escalar la imagen para que ocupe todo el ancho de la hoja
             footerImage.scaleAbsolute(PageSize.A4.getWidth(), 120); // Ajusta el alto a 50 puntos (puedes modificarlo si es necesario)

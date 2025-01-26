@@ -20,7 +20,6 @@ public class PdfRequest {
     private String fechaGeneracion;
     private String logoLocalPath;
     private String qrCodeUrl;
-    private String footerImagePath;
     private String BackgroundImagePath;
 
 
@@ -39,16 +38,6 @@ public class PdfRequest {
     public void setTextoCumplimiento(String textoCumplimiento) {
         this.textoCumplimiento = textoCumplimiento;
     }
-
-    // Getters y setters
-    public String getFooterImagePath() {
-        return footerImagePath;
-    }
-
-    public void setFooterImagePath(String footerImagePath) {
-        this.footerImagePath = footerImagePath;
-    }
-
 
     public String getExpediente() {
         return expediente;

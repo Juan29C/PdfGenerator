@@ -15,12 +15,13 @@ public class GeneratePdfService implements PDFServIn {
     @Override
     public void generatePdf(PdfRequest request) {
         // Validaciones básicas
-        //if (request.getContent() == null || request.getContent().isEmpty()) {
-          //  throw new IllegalArgumentException("El contenido no puede estar vacío");
-        //}
-        //if (request.getTitle() == null || request.getTitle().isEmpty()) {
-          //  throw new IllegalArgumentException("El título no puede estar vacío");
-        //}
+        if (request == null) {
+            throw new IllegalArgumentException("El objeto PdfRequest no puede ser nulo.");
+        }
+
+        if (request.getTitular() == null || request.getTitular().isEmpty()) {
+            throw new IllegalArgumentException("El texto del PDF no puede estar vacío.");
+        }
 
         // Definir la ruta del archivo basado en el título
         String filePath = "output/" + request.getTitular().replaceAll("\\s+", "_") + ".pdf";
