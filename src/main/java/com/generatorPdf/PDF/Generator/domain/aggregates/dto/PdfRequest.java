@@ -20,16 +20,6 @@ public class PdfRequest {
     private String fechaGeneracion;
     private String logoLocalPath;
     private String qrCodeUrl;
-    private String BackgroundImagePath;
-
-
-    public String getBackgroundImagePath() {
-        return BackgroundImagePath;
-    }
-
-    public void setBackgroundImagePath(String backgroundImagePath) {
-        BackgroundImagePath = backgroundImagePath;
-    }
 
     public String getTextoCumplimiento() {
         return textoCumplimiento;

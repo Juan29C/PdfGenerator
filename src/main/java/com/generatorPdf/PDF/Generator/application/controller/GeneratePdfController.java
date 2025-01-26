@@ -3,6 +3,7 @@ package com.generatorPdf.PDF.Generator.application.controller;
 import com.generatorPdf.PDF.Generator.domain.aggregates.dto.PdfRequest;
 import com.generatorPdf.PDF.Generator.domain.ports.in.PDFServIn;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,31 +25,13 @@ public class GeneratePdfController {
     }
 
     @PostMapping("/generate")
-    public void generatePdf(@RequestBody PdfRequest request, HttpServletResponse response) {
+    public ResponseEntity<String> generatePdf(@RequestBody PdfRequest request) {
         try {
             // Generar el PDF
             pdfServIn.generatePdf(request);
-
-            // Ruta del archivo generado
-            String filePath = "output/" + request.getTitular().replaceAll("\\s+", "_") + ".pdf";
-            File file = new File(filePath);
-
-            // Configurar la respuesta HTTP para la descarga
-            response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"");
-
-            // Enviar el archivo como flujo de datos
-            try (FileInputStream fileInputStream = new FileInputStream(file);
-                 OutputStream outputStream = response.getOutputStream()) {
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
-                }
-                outputStream.flush();
-            }
+            return ResponseEntity.ok("PDF generado exitosamente");
         } catch (Exception e) {
-            throw new RuntimeException("Error al generar o enviar el PDF", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al generar el PDF: " + e.getMessage());
         }
     }
 
