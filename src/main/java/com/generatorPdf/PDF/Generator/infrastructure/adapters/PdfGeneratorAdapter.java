@@ -5,6 +5,8 @@ import com.generatorPdf.PDF.Generator.domain.ports.out.PDFServOut;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import org.springframework.stereotype.Component;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -168,7 +170,9 @@ public class PdfGeneratorAdapter implements PDFServOut {
         document.add(limits);
 
         // Fecha
-        Paragraph date = new Paragraph("Nuevo Chimbote, " + request.getFechaGeneracion(), valueFont);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d 'de' MMMM 'de' yyyy");
+        String formattedDate = dateFormat.format(new Date()); // Genera la fecha actual en el formato deseado
+        Paragraph date = new Paragraph("Nuevo Chimbote, " + formattedDate, valueFont);
         date.setAlignment(Element.ALIGN_RIGHT);
         date.setSpacingAfter(20);
         document.add(date);
@@ -194,7 +198,7 @@ public class PdfGeneratorAdapter implements PDFServOut {
     private void addFooter(PdfWriter writer, PdfRequest request) {
         try {
             // Cargar la imagen del pie de página desde la ruta proporcionada
-            Image footerImage = Image.getInstance("imagen/pie_pagina.png");
+            Image footerImage = Image.getInstance("imagen/pie_pagina.png    ");
 
             // Escalar la imagen para que ocupe todo el ancho de la hoja
             footerImage.scaleAbsolute(PageSize.A4.getWidth(), 120); // Ajusta el alto a 50 puntos (puedes modificarlo si es necesario)
@@ -301,7 +305,7 @@ public class PdfGeneratorAdapter implements PDFServOut {
             // Columna 4: "Horario de Atención"
             Phrase horarioPhrase = new Phrase();
             horarioPhrase.add(new Chunk("Horario de Atención: ", labelFont));
-            horarioPhrase.add(new Chunk(request.getHorarioAtencionInicio() + " a " + request.getHorarioAtencionFin(), valueFont));
+            horarioPhrase.add(new Chunk("7:00" + " a " + "23:00", valueFont));
 
             PdfPCell horarioCell = new PdfPCell(horarioPhrase);
             horarioCell.setBorder(Rectangle.NO_BORDER);

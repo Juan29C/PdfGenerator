@@ -14,10 +14,7 @@ public class PdfRequest {
     private String actividadComercial;
     private String ubicacion;
     private String areaComercial;
-    private String horarioAtencionInicio;
-    private String horarioAtencionFin;
     private String textoLimites;
-    private String fechaGeneracion;
     private String logoLocalPath;
     private String qrCodeUrl;
 
@@ -125,36 +122,12 @@ public class PdfRequest {
         this.areaComercial = areaComercial;
     }
 
-    public String getHorarioAtencionInicio() {
-        return horarioAtencionInicio;
-    }
-
-    public void setHorarioAtencionInicio(String horarioAtencionInicio) {
-        this.horarioAtencionInicio = horarioAtencionInicio;
-    }
-
-    public String getHorarioAtencionFin() {
-        return horarioAtencionFin;
-    }
-
-    public void setHorarioAtencionFin(String horarioAtencionFin) {
-        this.horarioAtencionFin = horarioAtencionFin;
-    }
-
     public String getTextoLimites() {
         return textoLimites;
     }
 
     public void setTextoLimites(String textoLimites) {
         this.textoLimites = textoLimites;
-    }
-
-    public String getFechaGeneracion() {
-        return fechaGeneracion;
-    }
-
-    public void setFechaGeneracion(String fechaGeneracion) {
-        this.fechaGeneracion = fechaGeneracion;
     }
 
     public String getLogoLocalPath() {
