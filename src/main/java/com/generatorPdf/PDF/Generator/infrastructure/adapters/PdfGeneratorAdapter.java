@@ -1,6 +1,7 @@
 package com.generatorPdf.PDF.Generator.infrastructure.adapters;
 
 import com.generatorPdf.PDF.Generator.domain.aggregates.dto.PdfRequest;
+import com.generatorPdf.PDF.Generator.domain.aggregates.dto.PdfTramiteLicenciaDoc;
 import com.generatorPdf.PDF.Generator.domain.ports.out.PDFServOut;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
@@ -73,8 +74,6 @@ public class PdfGeneratorAdapter implements PDFServOut {
         }
     }
 
-
-
     private void addHeader(Document document, PdfWriter writer, PdfRequest request) throws Exception {
         // Crear una tabla con tres columnas (centrada y alineada a la derecha)
         PdfPTable headerTable = new PdfPTable(3); // Tres columnas: izquierda, centro, derecha
@@ -117,7 +116,6 @@ public class PdfGeneratorAdapter implements PDFServOut {
         // Agregar la tabla al documento
         document.add(headerTable);
     }
-
 
     private void addContent(Document document, PdfRequest request) throws DocumentException {
         Font titleFont = FontFactory.getFont(FontFactory.HELVETICA, 16, Font.BOLD);
@@ -213,8 +211,6 @@ public class PdfGeneratorAdapter implements PDFServOut {
             System.err.println("Error al cargar la imagen del pie de página: " + e.getMessage());
         }
     }
-
-
 
     private PdfPTable createDataTable(PdfRequest request, boolean isFirstBlock, Font labelFont, Font valueFont) throws DocumentException {
         PdfPTable table = new PdfPTable(3); // Tabla con 3 columnas como base
@@ -322,7 +318,6 @@ public class PdfGeneratorAdapter implements PDFServOut {
         return table;
     }
 
-
     // Nueva función auxiliar para agregar filas con interlineado
     private void addRowToTableWithSpacing(PdfPTable table, String label, String separator, String value, Font labelFont, Font valueFont, float spacingAfter) {
         PdfPCell labelCell = new PdfPCell(new Phrase(label, labelFont));
@@ -345,7 +340,6 @@ public class PdfGeneratorAdapter implements PDFServOut {
         table.addCell(spacingCell);
     }
 
-
     private void addRowToTable(PdfPTable table, String label, String separator, String value, Font labelFont, Font valueFont) {
         PdfPCell labelCell = new PdfPCell(new Phrase(label, labelFont));
         labelCell.setBorder(Rectangle.NO_BORDER);
@@ -359,4 +353,425 @@ public class PdfGeneratorAdapter implements PDFServOut {
         valueCell.setBorder(Rectangle.NO_BORDER);
         table.addCell(valueCell);
     }
+
+
+
+
+
+////// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// ////// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// ///
+////// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// ////// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// ///
+////// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// ////// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// ///
+////// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// ////// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// /// ///
+
+    @Override
+    public void createDocTramiteLicenciaPDF(PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc, String filePath) {
+        try {
+            File file = new File(filePath);
+            file.getParentFile().mkdirs();
+
+            // Crear el documento PDF con márgenes personalizados
+            Document document = new Document(PageSize.A4, 10, 10, 12, 12);
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filePath));
+            document.open();
+
+            // ===== ENCABEZADO DEL TRÁMITE ===== \\
+            addHeader_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
+
+            addContentI_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
+
+
+            document.close();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al generar el PDF", e);
+        }
+    }
+
+    // ======================================================================= ENCABEZADO ======================================================================= \\
+    private void addHeader_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws Exception {
+        PdfPTable headerTable = new PdfPTable(3);
+        headerTable.setWidthPercentage(100);
+
+        float[] columnWidths = {22f, 46f, 32f};
+        headerTable.setWidths(columnWidths);
+
+        // Establecer altura total de la tabla
+        headerTable.setTotalWidth(document.getPageSize().getWidth() - document.leftMargin() - document.rightMargin());
+        headerTable.setLockedWidth(true);
+
+        // Ajustar altura de la tabla a 50 unidades
+        headerTable.writeSelectedRows(0, -1, document.leftMargin(), document.getPageSize().getHeight() - 50, writer.getDirectContent());
+
+        try {
+            Image logo_MDNCH = Image.getInstance("imagen/LOGO-MDNCH.png");
+            logo_MDNCH.scaleToFit(70, 50);
+            PdfPCell header_Colum1 = new PdfPCell(logo_MDNCH);
+            header_Colum1.setBorder(Rectangle.BOX);
+            header_Colum1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            header_Colum1.setPaddingTop(5f);
+            header_Colum1.setPaddingBottom(5f);
+
+            headerTable.addCell(header_Colum1);
+
+        } catch (Exception e) {
+            PdfPCell fallbackText = new PdfPCell(new Phrase("LOGO NO DISPONIBLE"));
+            fallbackText.setBorder(Rectangle.BOX);
+            fallbackText.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerTable.addCell(fallbackText);
+        }
+
+        try {
+            PdfPTable tablaAnidada = new PdfPTable(1);
+            tablaAnidada.setWidthPercentage(100);
+            tablaAnidada.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+            Font boldFont = new Font(Font.UNDEFINED, 9, Font.BOLD);
+            PdfPCell fila1 = new PdfPCell(new Phrase("FORMATO DE DECLARACIÓN JURADA PARA LICENCIA DE FUNCIONAMIENTO", boldFont));
+            fila1.setBorder(Rectangle.NO_BORDER);
+            fila1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            fila1.setPaddingTop(10f);
+            fila1.setPaddingLeft(5);
+            fila1.setPaddingRight(5);
+            tablaAnidada.addCell(fila1);
+
+
+            Font cursivaFont = FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 6);
+            PdfPCell fila2 = new PdfPCell(new Phrase("LEY N° 28976 - Ley Marco de Licencia de Funcionamiento y modificatorias \n Versión 03", cursivaFont));
+            fila2.setBorder(Rectangle.NO_BORDER);
+            fila2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            fila2.setPaddingTop(5f);
+            fila2.setPaddingLeft(5);
+            fila2.setPaddingRight(5);
+
+            tablaAnidada.addCell(fila2);
+
+            PdfPCell header_Colum2 = new PdfPCell(tablaAnidada);
+            header_Colum2.setBorder(Rectangle.BOX);
+
+            headerTable.addCell(header_Colum2);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            PdfPTable tablaAnidada = new PdfPTable(1);
+            tablaAnidada.setWidthPercentage(100);
+
+            Font normalFont = new Font(Font.HELVETICA, 6, Font.NORMAL);
+
+            PdfPCell fila1 = new PdfPCell(new Phrase("N° de expediente:", normalFont));
+            fila1.setBorder(Rectangle.BOX);
+            fila1.setPaddingTop(5);
+            fila1.setPaddingBottom(5);
+            fila1.setPaddingLeft(3);
+            tablaAnidada.addCell(fila1);
+
+            PdfPTable fila2Tabla = new PdfPTable(2);
+            fila2Tabla.setWidthPercentage(100);
+            fila2Tabla.setWidths(new float[]{30f, 70f});
+
+            PdfPCell fila2C1 = new PdfPCell(new Phrase("Página:    1 de 2", normalFont));
+            fila2C1.setPaddingTop(5);
+            fila2C1.setPaddingBottom(5);
+            fila2C1.setPaddingLeft(3);
+            fila2Tabla.addCell(fila2C1);
+
+            PdfPCell fila2C2 = new PdfPCell(new Phrase("Fecha de recepción:", normalFont));
+            fila2C2.setPaddingTop(5);
+            fila2C2.setPaddingBottom(5);
+            fila2C2.setPaddingLeft(3);
+            fila2Tabla.addCell(fila2C2);
+
+            PdfPCell fila2 = new PdfPCell(fila2Tabla);
+            fila2.setBorder(Rectangle.BOX);
+            tablaAnidada.addCell(fila2);
+
+            // Tercera fila
+            PdfPCell fila3 = new PdfPCell(new Phrase("N° de recibo de pago:", normalFont));
+            fila3.setBorder(Rectangle.BOX);
+            fila3.setPaddingTop(5);
+            fila3.setPaddingBottom(5);
+            fila3.setPaddingLeft(3);
+            tablaAnidada.addCell(fila3);
+
+            // Cuarta fila
+            PdfPCell fila4 = new PdfPCell(new Phrase("Fecha de pago:", normalFont));
+            fila4.setBorder(Rectangle.BOX);
+            fila4.setPaddingTop(5);
+            fila4.setPaddingBottom(5);
+            fila4.setPaddingLeft(3);
+            tablaAnidada.addCell(fila4);
+
+            // Encapsular la tabla anidada en una celda con borde
+            PdfPCell header_Colum3 = new PdfPCell(tablaAnidada);
+            header_Colum3.setBorder(Rectangle.BOX);
+            headerTable.addCell(header_Colum3);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            PdfPTable finHeaderTable = new PdfPTable(1);
+            finHeaderTable.setWidthPercentage(100);
+            Font footerFont = new Font(Font.UNDEFINED, 5, Font.BOLDITALIC);
+            PdfPCell finHeader = new PdfPCell(new Phrase("VER INSTRUCCIONES PARA EL LLENADO (Página 2)", footerFont));
+            finHeader.setBorder(Rectangle.NO_BORDER);
+            finHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+            finHeader.setPaddingTop(6f);
+            finHeader.setPaddingBottom(6f);
+            finHeaderTable.addCell(finHeader);
+            document.add(headerTable);
+            document.add(finHeaderTable);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void addContentI_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws Exception {
+
+        try {
+            PdfPTable titleContentI = new PdfPTable(1);
+            titleContentI.setWidthPercentage(100);
+            Font titleFont = new Font(Font.HELVETICA, 5, Font.BOLD);
+            PdfPCell titloContent = new PdfPCell(new Phrase("I MODALIDAD DEL TRÁMITE QUE SOLICITA (marcar más de una alternativa si corresponde)", titleFont));
+            titloContent.setBorder(Rectangle.BOX);
+            titloContent.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titloContent.setPaddingTop(5f);
+            titloContent.setPaddingBottom(5f);
+            titloContent.setBackgroundColor(new GrayColor(0.85f)); // Gris claro
+
+            titleContentI.addCell(titloContent);
+            document.add(titleContentI);
+
+            PdfPTable alternativaContentI = new PdfPTable(3);
+            alternativaContentI.setWidthPercentage(100);
+            alternativaContentI.setWidths(new float[]{33.3f, 33.3f, 33.3f});
+
+            PdfPTable columnAlternativa1 = new PdfPTable(1);
+            columnAlternativa1.setWidthPercentage(100);
+
+            Font subTitleFont = new Font(Font.HELVETICA, 5, Font.BOLD);
+            PdfPCell tituloContentA1 = new PdfPCell(new Phrase("Licencia de funcionamiento", subTitleFont));
+            tituloContentA1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            tituloContentA1.setPadding(5);
+            tituloContentA1.setBorder(Rectangle.NO_BORDER);
+            columnAlternativa1.addCell(tituloContentA1);
+
+
+            PdfPTable fila2Tabla = new PdfPTable(2);
+            fila2Tabla.setWidthPercentage(100);
+            fila2Tabla.setWidths(new float[]{50f, 50f});
+            fila2Tabla.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+            Font normalFont = new Font(Font.HELVETICA, 6, Font.NORMAL);
+
+            PdfPTable columnaIzquierda = new PdfPTable(1);
+            columnaIzquierda.setWidthPercentage(100);
+            columnaIzquierda.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+
+            PdfPTable filaIzq1 = new PdfPTable(2);
+            filaIzq1.setWidths(new float[]{10f, 90f});
+            filaIzq1.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+
+            Image cuadro = Image.getInstance("imagen/cuadro-vacío.png");
+            cuadro.scaleAbsolute(10f, 10f);
+
+            PdfPCell checkboxTemporal = new PdfPCell(cuadro);
+            checkboxTemporal.setHorizontalAlignment(Element.ALIGN_CENTER);
+            checkboxTemporal.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            checkboxTemporal.setBorder(Rectangle.NO_BORDER);
+            checkboxTemporal.setPadding(2);
+
+            filaIzq1.addCell(checkboxTemporal);
+
+            PdfPCell textoTemporal = new PdfPCell(new Phrase("     Indeterminada", normalFont));
+            textoTemporal.setBorder(Rectangle.NO_BORDER);
+            textoTemporal.setPadding(5);
+            filaIzq1.addCell(textoTemporal);
+
+            PdfPCell filaIzq1Cell = new PdfPCell(filaIzq1);
+            filaIzq1Cell.setBorder(Rectangle.NO_BORDER);
+            columnaIzquierda.addCell(filaIzq1Cell);
+
+            PdfPCell textoExtra = new PdfPCell(new Phrase("", normalFont));
+            textoExtra.setBorder(Rectangle.NO_BORDER);
+            textoExtra.setPadding(5);
+            columnaIzquierda.addCell(textoExtra);
+
+            PdfPTable columnaDerecha = new PdfPTable(1);
+            columnaDerecha.setWidthPercentage(100);
+            columnaDerecha.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+
+            PdfPTable filaDer1 = new PdfPTable(2);
+            filaDer1.setWidths(new float[]{10f, 90f});
+            filaDer1.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+
+            Image cuadro2 = Image.getInstance("imagen/cuadro-vacío.png");
+            cuadro2.scaleAbsolute(10f, 10f);
+
+            PdfPCell checkboxMundo = new PdfPCell(cuadro2);
+            checkboxMundo.setHorizontalAlignment(Element.ALIGN_CENTER);
+            checkboxMundo.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            checkboxMundo.setBorder(Rectangle.NO_BORDER);
+            checkboxMundo.setPadding(2);
+
+            filaDer1.addCell(checkboxMundo);
+
+            PdfPCell textoMundo = new PdfPCell(new Phrase("     Temporal", normalFont));
+            textoMundo.setBorder(Rectangle.NO_BORDER);
+            textoMundo.setPadding(5);
+            filaDer1.addCell(textoMundo);
+
+            PdfPCell filaDer1Cell = new PdfPCell(filaDer1);
+            filaDer1Cell.setBorder(Rectangle.NO_BORDER);
+            columnaDerecha.addCell(filaDer1Cell);
+
+            PdfPTable filaDer2 = new PdfPTable(1);
+            filaDer2.setWidthPercentage(100);
+
+            PdfPCell textoPlazo = new PdfPCell(new Phrase("Indicar plazo: " + "......................", normalFont));
+            textoPlazo.setBorder(Rectangle.NO_BORDER);
+            textoPlazo.setPadding(2);
+            filaDer2.addCell(textoPlazo);
+
+            PdfPCell filaDer2Cell = new PdfPCell(filaDer2);
+            filaDer2Cell.setBorder(Rectangle.NO_BORDER);
+            columnaDerecha.addCell(filaDer2Cell);
+
+
+            fila2Tabla.addCell(columnaIzquierda);
+            fila2Tabla.addCell(columnaDerecha);
+
+            PdfPCell fila2 = new PdfPCell(fila2Tabla);
+            fila2.setBorder(Rectangle.NO_BORDER);
+            columnAlternativa1.addCell(fila2);
+
+            PdfPTable fila3Tabla = new PdfPTable(2);
+            fila3Tabla.setWidthPercentage(100);
+            fila3Tabla.setWidths(new float[]{10f, 90f});
+            fila3Tabla.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+            Image cuadro3 = Image.getInstance("imagen/cuadro-vacío.png");
+            cuadro3.scaleAbsolute(10f, 10f);
+
+            PdfPCell fila3C1 = new PdfPCell(cuadro3);
+            fila3C1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            fila3C1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            fila3C1.setBorder(Rectangle.NO_BORDER);
+            fila3C1.setPadding(2);
+
+            fila3Tabla.addCell(fila3C1);
+
+            PdfPTable fila3Textos = new PdfPTable(1);
+            fila3Textos.setWidthPercentage(100);
+
+            PdfPCell textoPrincipal = new PdfPCell(new Phrase("Licencia de funcionamiento más autorización publicitario", normalFont));
+            textoPrincipal.setBorder(Rectangle.NO_BORDER);
+            textoPrincipal.setPadding(2);
+            fila3Textos.addCell(textoPrincipal);
+
+            PdfPCell textoTipoAnuncio = new PdfPCell(new Phrase("Tipo de anuncio (especificar):", normalFont));
+            textoTipoAnuncio.setBorder(Rectangle.NO_BORDER);
+            textoTipoAnuncio.setPadding(2);
+            fila3Textos.addCell(textoTipoAnuncio);
+
+            PdfPCell textoLinea = new PdfPCell(new Phrase("...........................................................", normalFont));
+            textoLinea.setBorder(Rectangle.NO_BORDER);
+            textoLinea.setPadding(2);
+            fila3Textos.addCell(textoLinea);
+
+            PdfPCell fila3C2 = new PdfPCell(fila3Textos);
+            fila3C2.setBorder(Rectangle.NO_BORDER);
+            fila3C2.setPadding(5);
+
+            fila3Tabla.addCell(fila3C2);
+
+            PdfPCell fila3 = new PdfPCell(fila3Tabla);
+            fila3.setBorder(Rectangle.NO_BORDER);
+            columnAlternativa1.addCell(fila3);
+
+            PdfPTable fila4Tabla = new PdfPTable(2);
+            fila4Tabla.setWidthPercentage(100);
+            fila4Tabla.setWidths(new float[]{10f, 90f});
+            fila4Tabla.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+
+            Image cuadro4 = Image.getInstance("imagen/cuadro-vacío.png");
+            cuadro4.scaleAbsolute(10f, 10f);
+
+            PdfPCell fila4C1 = new PdfPCell(cuadro4);
+            fila4C1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            fila4C1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            fila4C1.setBorder(Rectangle.NO_BORDER);
+            fila4C1.setPadding(2);
+
+            fila4Tabla.addCell(fila4C1);
+
+            PdfPTable fila4Textos = new PdfPTable(1);
+            fila4Textos.setWidthPercentage(100);
+
+            PdfPCell textoFila4 = new PdfPCell(new Phrase("Licencia para cesionario", normalFont));
+            textoFila4.setBorder(Rectangle.NO_BORDER);
+            textoFila4.setPadding(2);
+            fila4Textos.addCell(textoFila4);
+
+            PdfPCell textoNumLicencia = new PdfPCell(new Phrase("N° de licencia de funcionamiento principal:", normalFont));
+            textoNumLicencia.setBorder(Rectangle.NO_BORDER);
+            textoNumLicencia.setPadding(2);
+            fila4Textos.addCell(textoNumLicencia);
+
+            PdfPCell textoLinea2 = new PdfPCell(new Phrase("...........................................................", normalFont));
+            textoLinea2.setBorder(Rectangle.NO_BORDER);
+            textoLinea2.setPadding(2);
+            fila4Textos.addCell(textoLinea2);
+
+            PdfPCell fila4C2 = new PdfPCell(fila4Textos);
+            fila4C2.setBorder(Rectangle.NO_BORDER);
+            fila4C2.setPadding(5);
+
+            fila4Tabla.addCell(fila4C2);
+
+            PdfPCell fila4 = new PdfPCell(fila4Tabla);
+            fila4.setBorder(Rectangle.NO_BORDER);
+            columnAlternativa1.addCell(fila4);
+
+            PdfPTable fila5Tabla = new PdfPTable(2);
+            fila5Tabla.setWidthPercentage(100);
+            fila5Tabla.setWidths(new float[]{10f, 90f});
+            fila5Tabla.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+
+            Image cuadro5 = Image.getInstance("imagen/cuadro-vacío.png");
+            cuadro5.scaleAbsolute(10f, 10f);
+
+            PdfPCell fila5C1 = new PdfPCell(cuadro5);
+            fila5C1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            fila5C1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            fila5C1.setBorder(Rectangle.NO_BORDER);
+            fila5C1.setPadding(2);
+
+            fila5Tabla.addCell(fila5C1);
+
+            PdfPCell fila5C2 = new PdfPCell(new Phrase("Licencia para mercados de abastos, galerías comerciales y centros comerciales", normalFont));
+            fila5C2.setBorder(Rectangle.NO_BORDER);
+            fila5C2.setPadding(5);
+            fila5Tabla.addCell(fila5C2);
+
+            PdfPCell fila5 = new PdfPCell(fila5Tabla);
+            fila5.setBorder(Rectangle.NO_BORDER);
+            columnAlternativa1.addCell(fila5);
+
+            alternativaContentI.addCell(columnAlternativa1);
+
+            PdfPCell emptyCell = new PdfPCell(new Phrase(" "));
+            emptyCell.setBorder(Rectangle.BOX);
+            emptyCell.setFixedHeight(70);
+            alternativaContentI.addCell(emptyCell);
+            alternativaContentI.addCell(emptyCell);
+
+            document.add(alternativaContentI);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 }

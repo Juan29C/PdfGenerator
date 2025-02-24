@@ -1,5 +1,6 @@
 package com.generatorPdf.PDF.Generator.domain.impl;
 import com.generatorPdf.PDF.Generator.domain.aggregates.dto.PdfRequest;
+import com.generatorPdf.PDF.Generator.domain.aggregates.dto.PdfTramiteLicenciaDoc;
 import com.generatorPdf.PDF.Generator.domain.ports.in.PDFServIn;
 import com.generatorPdf.PDF.Generator.domain.ports.out.PDFServOut;
 import org.springframework.stereotype.Service;
@@ -29,5 +30,22 @@ public class GeneratePdfService implements PDFServIn {
         // Pasar todos los valores al adaptador
         pdfServOut.createPdf(request, filePath);
     }
+
+    @Override
+    public void generateDocTramiteLicenciaPDF(PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc){
+        // Validaciones básicas
+        if (pdfTramiteLicenciaDoc == null) {
+            throw new IllegalArgumentException("El objeto PdfRequest no puede ser nulo.");
+        }
+
+        // Definir la ruta del archivo basado en el título
+        String filePath = "outputDaniel/" + pdfTramiteLicenciaDoc.getNombreNegocio().replaceAll("\\s+", "_") + ".pdf";
+
+        // Pasar todos los valores al adaptador
+        pdfServOut.createDocTramiteLicenciaPDF(pdfTramiteLicenciaDoc, filePath);
+    }
+
+
+
 }
 

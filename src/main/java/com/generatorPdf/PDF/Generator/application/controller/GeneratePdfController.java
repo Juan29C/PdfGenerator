@@ -1,6 +1,7 @@
 package com.generatorPdf.PDF.Generator.application.controller;
 
 import com.generatorPdf.PDF.Generator.domain.aggregates.dto.PdfRequest;
+import com.generatorPdf.PDF.Generator.domain.aggregates.dto.PdfTramiteLicenciaDoc;
 import com.generatorPdf.PDF.Generator.domain.ports.in.PDFServIn;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletResponse;
+
+import javax.xml.transform.sax.SAXResult;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -34,6 +37,13 @@ public class GeneratePdfController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al generar el PDF: " + e.getMessage());
         }
     }
+
+    @PostMapping("/generate-doc-tramite")
+    public ResponseEntity<String> generatePdfTramiteLicencia(@RequestBody PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc){
+            pdfServIn.generateDocTramiteLicenciaPDF(pdfTramiteLicenciaDoc);
+            return ResponseEntity.ok("PDF del trámite de licencia generado exitosamente");
+    }
+
 
     @GetMapping("/generate-and-download")
     public ResponseEntity<byte[]> generateAndDownloadPdf(@RequestParam String title) throws IOException {
