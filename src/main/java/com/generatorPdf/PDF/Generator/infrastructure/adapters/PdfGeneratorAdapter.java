@@ -382,7 +382,14 @@ public class PdfGeneratorAdapter implements PDFServOut {
             // === PRIMER CONTENIDO DEL TRÁMITE === \\
             addContentI_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
 
+            // === SEGUNDO CONTENIDO DEL TRÁMITE === \\
             addContetII_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
+
+            // === TERCER CONTENIDO DEL TRÁMITE === \\
+            addContetIII_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
+
+            // === CUARTO CONTENIDO DEL TRÁMITE === \\
+            addContetIV_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
 
             document.close();
         } catch (Exception e) {
@@ -1066,47 +1073,529 @@ public class PdfGeneratorAdapter implements PDFServOut {
         }
 
         try{
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< CREACIÓN DE 4 COLUMNAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             PdfPTable datosSolicitanteContent = new PdfPTable(4);
             datosSolicitanteContent.setWidthPercentage(100);
             datosSolicitanteContent.setWidths(new float[]{21f, 24f, 30f, 25f});
 
-            PdfPCell titleDNI = new PdfPCell(new Phrase("N° DNI/N° C.E", normalFont));
-            titleDNI.setBorder(Rectangle.BOX);
-            titleDNI.setHorizontalAlignment(Element.ALIGN_CENTER);
-            titleDNI.setPadding(2f);
-            titleDNI.setPaddingBottom(2f);
-            titleDNI.setBackgroundColor(new GrayColor(0.92f));
-            datosSolicitanteContent.addCell(titleDNI);
+            GrayColor headerBgColor = new GrayColor(0.92f);
 
-            PdfPCell titleRUC = new PdfPCell(new Phrase("N° RUC", normalFont ));
-            titleRUC.setBorder(Rectangle.BOX);
-            titleRUC.setHorizontalAlignment(Element.ALIGN_CENTER);
-            titleRUC.setPadding(2f);
-            titleRUC.setPaddingBottom(2f);
-            titleRUC.setBackgroundColor(new GrayColor(0.92f));
-            datosSolicitanteContent.addCell(titleRUC);
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO DNI >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerDNI = new PdfPCell(new Phrase("N° DNI/N° C.E", normalFont));
+            headerDNI.setBorder(Rectangle.BOX);
+            headerDNI.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerDNI.setPadding(2f);
+            headerDNI.setBackgroundColor(headerBgColor);
 
-            PdfPCell titleTelefono = new PdfPCell(new Phrase("N° Teléfono",normalFont));
-            titleTelefono.setBorder(Rectangle.BOX);
-            titleTelefono.setHorizontalAlignment(Element.ALIGN_CENTER);
-            titleTelefono.setPadding(2f);
-            titleTelefono.setPaddingBottom(2f);
-            titleTelefono.setBackgroundColor(new GrayColor(0.92f));
-            datosSolicitanteContent.addCell(titleTelefono);
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO RUC >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerRUC = new PdfPCell(new Phrase("N° RUC", normalFont));
+            headerRUC.setBorder(Rectangle.BOX);
+            headerRUC.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerRUC.setPadding(2f);
+            headerRUC.setBackgroundColor(headerBgColor);
 
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO TELÉFONO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerTelefono = new PdfPCell(new Phrase("N° Teléfono", normalFont));
+            headerTelefono.setBorder(Rectangle.BOX);
+            headerTelefono.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerTelefono.setPadding(2f);
+            headerTelefono.setBackgroundColor(headerBgColor);
 
-            PdfPCell titleCorreo = new PdfPCell(new Phrase("Correo electrónico", normalFont));
-            titleCorreo.setBorder(Rectangle.BOX);
-            titleCorreo.setHorizontalAlignment(Element.ALIGN_CENTER);
-            titleCorreo.setPadding(2f);
-            titleCorreo.setPaddingBottom(2f);
-            titleCorreo.setBackgroundColor(new GrayColor(0.92f));
-            datosSolicitanteContent.addCell(titleCorreo);
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO CORREO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerCorreo = new PdfPCell(new Phrase("Correo electrónico", normalFont));
+            headerCorreo.setBorder(Rectangle.BOX);
+            headerCorreo.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerCorreo.setPadding(2f);
+            headerCorreo.setBackgroundColor(headerBgColor);
 
+            //TODO: --------------- SE AGREGA TODO EL CONTENIDO A LAS 4 COLUMNAS
+            datosSolicitanteContent.addCell(headerDNI);
+            datosSolicitanteContent.addCell(headerRUC);
+            datosSolicitanteContent.addCell(headerTelefono);
+            datosSolicitanteContent.addCell(headerCorreo);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT DNI >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataDNI = new PdfPCell(new Phrase("85762413", inputFont));
+            dataDNI.setBorder(Rectangle.BOX);
+            dataDNI.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataDNI.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataDNI.setPadding(5f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT RUC >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataRUC = new PdfPCell(new Phrase("20465795312", inputFont));
+            dataRUC.setBorder(Rectangle.BOX);
+            dataRUC.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataRUC.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataRUC.setPadding(5f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT TELÉFONO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataTelefono = new PdfPCell(new Phrase("934323568", inputFont));
+            dataTelefono.setBorder(Rectangle.BOX);
+            dataTelefono.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataTelefono.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataTelefono.setPadding(5f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT CORREO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataCorreo = new PdfPCell(new Phrase("pedro.anuel@gmail.com", inputFont));
+            dataCorreo.setBorder(Rectangle.BOX);
+            dataCorreo.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataCorreo.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataCorreo.setPadding(5f);
+
+            //TODO: --------------- SE AGREGA TODO EL CONTENIDO A LAS 4 COLUMNAS
+            datosSolicitanteContent.addCell(dataDNI);
+            datosSolicitanteContent.addCell(dataRUC);
+            datosSolicitanteContent.addCell(dataTelefono);
+            datosSolicitanteContent.addCell(dataCorreo);
+
+            //todo: se agrega al documento
             document.add(datosSolicitanteContent);
+
+
+            //TODO: ESPACIO VACÍO
+            PdfPTable vacioEspacio = new PdfPTable(1);
+            vacioEspacio.setWidthPercentage(100);
+            PdfPCell vacioContent = new PdfPCell(new Phrase("", normalFont));
+            vacioContent.setBorder(Rectangle.NO_BORDER);
+            vacioContent.setHorizontalAlignment(Element.ALIGN_CENTER);
+            vacioContent.setPaddingTop(3f);
+            vacioContent.setPaddingBottom(3f);
+            vacioEspacio.addCell(vacioContent);
+            document.add(vacioEspacio);
+
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void addContetIII_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws  Exception {
+        Font subTitleFont = new Font(Font.HELVETICA, 5, Font.BOLD);
+        Font titleFont = new Font(Font.HELVETICA, 5, Font.BOLD);
+        Font normalFont = new Font(Font.HELVETICA, 5, Font.NORMAL);
+        Font inputFont = new Font(Font.HELVETICA, 7, Font.NORMAL);
+        try {
+            PdfPTable titleContentIII = new PdfPTable(1);
+            titleContentIII.setWidthPercentage(100);
+
+            PdfPCell titloContent = new PdfPCell(new Phrase("III DATOS DEL REPRESENTANTE LEGAL O APODERADO", titleFont));
+            titloContent.setBorder(Rectangle.BOX);
+            titloContent.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titloContent.setPaddingTop(5f);
+            titloContent.setPaddingBottom(5f);
+            titloContent.setBackgroundColor(new GrayColor(0.85f)); // Gris claro
+            titleContentIII.addCell(titloContent);
+            document.add(titleContentIII);
+            try {
+                //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< CREACIÓN DE 3 COLUMNAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                PdfPTable datosSUNARPContent = new PdfPTable(3);
+                datosSUNARPContent.setWidthPercentage(100);
+                datosSUNARPContent.setWidths(new float[]{53f, 21f, 26f});
+
+                GrayColor headerBgColor = new GrayColor(0.92f);
+
+                //TODO: <<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO APELLIDOS Y NOMBRES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                PdfPCell headerApellidoNombre = new PdfPCell(new Phrase("Apellidos y Nombres", normalFont));
+                headerApellidoNombre.setBorder(Rectangle.BOX);
+                headerApellidoNombre.setHorizontalAlignment(Element.ALIGN_CENTER);
+                headerApellidoNombre.setPadding(2f);
+                headerApellidoNombre.setPaddingTop(4f);
+                headerApellidoNombre.setBackgroundColor(headerBgColor);
+
+                //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO DNI >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                PdfPCell headerDNI = new PdfPCell(new Phrase("N° DNI/N° C.E", normalFont));
+                headerDNI.setBorder(Rectangle.BOX);
+                headerDNI.setHorizontalAlignment(Element.ALIGN_CENTER);
+                headerDNI.setPadding(2f);
+                headerDNI.setPaddingTop(4f);
+                headerDNI.setBackgroundColor(headerBgColor);
+
+                //TODO: <<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO PARTIDA SUNARP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                PdfPCell headerPartidaSUNARP = new PdfPCell(new Phrase("N° de partida electrónica y asiento de inscripción SUNARP (de corresponder)", normalFont));
+                headerPartidaSUNARP.setBorder(Rectangle.BOX);
+                headerPartidaSUNARP.setHorizontalAlignment(Element.ALIGN_CENTER);
+                headerPartidaSUNARP.setPadding(2f);
+                headerPartidaSUNARP.setBackgroundColor(headerBgColor);
+
+                //TODO: --------------- SE AGREGA TODO EL CONTENIDO A LAS 3 COLUMNAS
+                datosSUNARPContent.addCell(headerApellidoNombre);
+                datosSUNARPContent.addCell(headerDNI);
+                datosSUNARPContent.addCell(headerPartidaSUNARP);
+
+                //TODO: <<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT APELLIDOS Y NOMBRES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                PdfPCell dataApellidoNombre = new PdfPCell(new Phrase("Bruno Emilio Fernandez Messi", inputFont));
+                dataApellidoNombre.setBorder(Rectangle.BOX);
+                dataApellidoNombre.setHorizontalAlignment(Element.ALIGN_CENTER);
+                dataApellidoNombre.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                dataApellidoNombre.setPadding(5f);
+
+                //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT DNI >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                PdfPCell dataDNI = new PdfPCell(new Phrase("72154325", inputFont));
+                dataDNI.setBorder(Rectangle.BOX);
+                dataDNI.setHorizontalAlignment(Element.ALIGN_CENTER);
+                dataDNI.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                dataDNI.setPadding(5f);
+
+                //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT PARTIDA SUNARP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                PdfPCell dataPartidaSUNARP = new PdfPCell(new Phrase("11254", inputFont));
+                dataPartidaSUNARP.setBorder(Rectangle.BOX);
+                dataPartidaSUNARP.setHorizontalAlignment(Element.ALIGN_CENTER);
+                dataPartidaSUNARP.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+                dataPartidaSUNARP.setPadding(5f);
+
+                //TODO: --------------- SE AGREGA TODO EL CONTENIDO A LAS 3 COLUMNAS
+                datosSUNARPContent.addCell(dataApellidoNombre);
+                datosSUNARPContent.addCell(dataDNI);
+                datosSUNARPContent.addCell(dataPartidaSUNARP);
+
+                //todo: se agrega al documento
+                document.add(datosSUNARPContent);
+
+
+                //TODO: ESPACIO VACÍO
+                PdfPTable vacioEspacio = new PdfPTable(1);
+                vacioEspacio.setWidthPercentage(100);
+                PdfPCell vacioContent = new PdfPCell(new Phrase("", normalFont));
+                vacioContent.setBorder(Rectangle.NO_BORDER);
+                vacioContent.setHorizontalAlignment(Element.ALIGN_CENTER);
+                vacioContent.setPaddingTop(3f);
+                vacioContent.setPaddingBottom(3f);
+                vacioEspacio.addCell(vacioContent);
+                document.add(vacioEspacio);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void addContetIV_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws  Exception{
+        Font subTitleFont = new Font(Font.HELVETICA, 5, Font.BOLD);
+        Font titleFont = new Font(Font.HELVETICA, 5, Font.BOLD);
+        Font normalFont = new Font(Font.HELVETICA, 5, Font.NORMAL);
+        Font inputFont = new Font(Font.HELVETICA, 7, Font.NORMAL);
+        try {
+            PdfPTable titleContentIV = new PdfPTable(1);
+            titleContentIV.setWidthPercentage(100);
+
+
+            PdfPCell titloContent = new PdfPCell(new Phrase("IV DATOS DEL ESTABLECIMIENTO", titleFont));
+            titloContent.setBorder(Rectangle.BOX);
+            titloContent.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titloContent.setPaddingTop(5f);
+            titloContent.setPaddingBottom(5f);
+            titloContent.setBackgroundColor(new GrayColor(0.85f)); // Gris claro
+            titleContentIV.addCell(titloContent);
+
+            PdfPCell titleApe_Nom_RS = new PdfPCell(new Phrase("Nombre Comercial", normalFont));
+            titleApe_Nom_RS.setBorder(Rectangle.BOX);
+            titleApe_Nom_RS.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titleApe_Nom_RS.setPaddingTop(2f);
+            titleApe_Nom_RS.setPaddingBottom(2f);
+            titleApe_Nom_RS.setBackgroundColor(new GrayColor(0.92f));
+            titleContentIV.addCell(titleApe_Nom_RS);
+
+
+            PdfPCell varNombre_RazonSocial = new PdfPCell(new Phrase("LAS OLAS DEL MAR",inputFont));
+            varNombre_RazonSocial.setBorder(Rectangle.BOX);
+            varNombre_RazonSocial.setHorizontalAlignment(Element.ALIGN_CENTER);
+            varNombre_RazonSocial.setPaddingTop(5f);
+            varNombre_RazonSocial.setPaddingBottom(5f);
+            titleContentIV.addCell(varNombre_RazonSocial);
+
+            document.add(titleContentIV);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< CREACIÓN DE 4 COLUMNAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPTable datosNegocioI = new PdfPTable(4);
+            datosNegocioI.setWidthPercentage(100);
+            datosNegocioI.setWidths(new float[]{21f, 37f, 20f, 22f});
+            GrayColor headerBgColor = new GrayColor(0.92f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO CIIU >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerCIIU = new PdfPCell(new Phrase("Código CIIU *", normalFont));
+            headerCIIU.setBorder(Rectangle.BOX);
+            headerCIIU.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerCIIU.setPadding(2f);
+            headerCIIU.setBackgroundColor(headerBgColor);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO GIROS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerGiro = new PdfPCell(new Phrase("Giro/s *", normalFont));
+            headerGiro.setBorder(Rectangle.BOX);
+            headerGiro.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerGiro.setPadding(2f);
+            headerGiro.setBackgroundColor(headerBgColor);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO ACTIVIDAD >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerActividad = new PdfPCell(new Phrase("Actividad", normalFont));
+            headerActividad.setBorder(Rectangle.BOX);
+            headerActividad.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerActividad.setPadding(2f);
+            headerActividad.setBackgroundColor(headerBgColor);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO ZONIFICACIÓN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerZonificacion = new PdfPCell(new Phrase("Zonificación", normalFont));
+            headerZonificacion.setBorder(Rectangle.BOX);
+            headerZonificacion.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerZonificacion.setPadding(2f);
+            headerZonificacion.setBackgroundColor(headerBgColor);
+
+            //TODO: --------------- SE AGREGA TODO EL CONTENIDO A LAS 4 COLUMNAS
+            datosNegocioI.addCell(headerCIIU);
+            datosNegocioI.addCell(headerGiro);
+            datosNegocioI.addCell(headerActividad);
+            datosNegocioI.addCell(headerZonificacion);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT CIIU >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataCIIU = new PdfPCell(new Phrase("75824", inputFont));
+            dataCIIU.setBorder(Rectangle.BOX);
+            dataCIIU.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataCIIU.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataCIIU.setPadding(5f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT GIROS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataGiro = new PdfPCell(new Phrase("Restaurante", inputFont));
+            dataGiro.setBorder(Rectangle.BOX);
+            dataGiro.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataGiro.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataGiro.setPadding(5f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT ACTIVIDAD >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataActividad = new PdfPCell(new Phrase("Venta de platos marinos y bebidas alcoholicas", inputFont));
+            dataActividad.setBorder(Rectangle.BOX);
+            dataActividad.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataActividad.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataActividad.setPadding(5f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT ZONIFICACIÓN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataZonificacion = new PdfPCell(new Phrase("ZON-1234", inputFont));
+            dataZonificacion.setBorder(Rectangle.BOX);
+            dataZonificacion.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataZonificacion.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataZonificacion.setPadding(5f);
+
+
+            //TODO: --------------- SE AGREGA TODO EL CONTENIDO A LAS 4 COLUMNAS
+            datosNegocioI.addCell(dataCIIU);
+            datosNegocioI.addCell(dataGiro);
+            datosNegocioI.addCell(dataActividad);
+            datosNegocioI.addCell(dataZonificacion);
+
+            //todo: se agrega al documento
+            document.add(datosNegocioI);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try {
+            PdfPTable titleContentIV_2 = new PdfPTable(1);
+            titleContentIV_2.setWidthPercentage(100);
+
+            PdfPCell titleDireccion = new PdfPCell(new Phrase("Dirección", normalFont));
+            titleDireccion.setBorder(Rectangle.BOX);
+            titleDireccion.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titleDireccion.setPaddingTop(2f);
+            titleDireccion.setPaddingBottom(2f);
+            titleDireccion.setBackgroundColor(new GrayColor(0.92f));
+            titleContentIV_2.addCell(titleDireccion);
+
+            document.add(titleContentIV_2);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< CREACIÓN DE 4 COLUMNAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPTable datosNegocioII = new PdfPTable(4);
+            datosNegocioII.setWidthPercentage(100);
+            datosNegocioII.setWidths(new float[]{21f, 24f, 30f, 25f});
+            GrayColor headerBgColor = new GrayColor(0.92f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO Av./Jr./Ca./Pje./Otros >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerAv = new PdfPCell(new Phrase("Av./Jr./Ca./Pje./Otros", normalFont));
+            headerAv.setBorder(Rectangle.BOX);
+            headerAv.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerAv.setPadding(2f);
+            headerAv.setBackgroundColor(headerBgColor);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO N°/Int./Mz./LL/Otros >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerMz = new PdfPCell(new Phrase("N°/Int./Mz./LL/Otros", normalFont));
+            headerMz.setBorder(Rectangle.BOX);
+            headerMz.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerMz.setPadding(2f);
+            headerMz.setBackgroundColor(headerBgColor);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO Urb./AA.HH/Otros >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerUrb = new PdfPCell(new Phrase("Urb./AA.HH/Otros", normalFont));
+            headerUrb.setBorder(Rectangle.BOX);
+            headerUrb.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerUrb.setPadding(2f);
+            headerUrb.setBackgroundColor(headerBgColor);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO PROVINCIA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerProvincia = new PdfPCell(new Phrase("Provincia", normalFont));
+            headerProvincia.setBorder(Rectangle.BOX);
+            headerProvincia.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerProvincia.setPadding(2f);
+            headerProvincia.setBackgroundColor(headerBgColor);
+
+            //TODO: --------------- SE AGREGA TODO EL CONTENIDO A LAS 4 COLUMNAS
+            datosNegocioII.addCell(headerAv);
+            datosNegocioII.addCell(headerMz);
+            datosNegocioII.addCell(headerUrb);
+            datosNegocioII.addCell(headerProvincia);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT Av./Jr./Ca./Pje./Otros >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataAv = new PdfPCell(new Phrase("Av. Anchoveta", inputFont));
+            dataAv.setBorder(Rectangle.BOX);
+            dataAv.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataAv.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataAv.setPadding(5f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT N°/Int./Mz./LL/Otros >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataMz = new PdfPCell(new Phrase("Mz. A", inputFont));
+            dataMz.setBorder(Rectangle.BOX);
+            dataMz.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataMz.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataMz.setPadding(5f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT Urb./AA.HH/Otros >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataUrb = new PdfPCell(new Phrase("Urb. Pacífico", inputFont));
+            dataUrb.setBorder(Rectangle.BOX);
+            dataUrb.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataUrb.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataUrb.setPadding(5f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT PROVINCIA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataProvincia = new PdfPCell(new Phrase("SANTA", inputFont));
+            dataProvincia.setBorder(Rectangle.BOX);
+            dataProvincia.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataProvincia.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataProvincia.setPadding(5f);
+
+            //TODO: --------------- SE AGREGA TODO EL CONTENIDO A LAS 4 COLUMNAS
+            datosNegocioII.addCell(dataAv);
+            datosNegocioII.addCell(dataMz);
+            datosNegocioII.addCell(dataUrb);
+            datosNegocioII.addCell(dataProvincia);
+
+            //todo: se agrega al documento
+            document.add(datosNegocioII);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        try {
+            PdfPTable titleContentIV_3 = new PdfPTable(1);
+            titleContentIV_3.setWidthPercentage(100);
+
+            PdfPCell titleAutorizacionSectorial = new PdfPCell(new Phrase("Autorización Sectorial (de corresponder)", normalFont));
+            titleAutorizacionSectorial.setBorder(Rectangle.BOX);
+            titleAutorizacionSectorial.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titleAutorizacionSectorial.setPaddingTop(2f);
+            titleAutorizacionSectorial.setPaddingBottom(2f);
+            titleAutorizacionSectorial.setBackgroundColor(new GrayColor(0.92f));
+            titleContentIV_3.addCell(titleAutorizacionSectorial);
+
+            document.add(titleContentIV_3);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< CREACIÓN DE 4 COLUMNAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPTable datosNegocioIII = new PdfPTable(4);
+            datosNegocioIII.setWidthPercentage(100);
+            datosNegocioIII.setWidths(new float[]{31f, 36f, 14f, 19f});
+            GrayColor headerBgColor = new GrayColor(0.92f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO ENTIDAD >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerEntidad = new PdfPCell(new Phrase("Entidad que otorga autorización", normalFont));
+            headerEntidad.setBorder(Rectangle.BOX);
+            headerEntidad.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerEntidad.setPadding(2f);
+            headerEntidad.setBackgroundColor(headerBgColor);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO DENOMINACIÓN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerDenominacion = new PdfPCell(new Phrase("Denominación de la autoridad sectorial", normalFont));
+            headerDenominacion.setBorder(Rectangle.BOX);
+            headerDenominacion.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerDenominacion.setPadding(2f);
+            headerDenominacion.setBackgroundColor(headerBgColor);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO FECHA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerFecha = new PdfPCell(new Phrase("Fecha de autorización", normalFont));
+            headerFecha.setBorder(Rectangle.BOX);
+            headerFecha.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerFecha.setPadding(2f);
+            headerFecha.setBackgroundColor(headerBgColor);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO NÚMERO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerNumero = new PdfPCell(new Phrase("Número de autorización", normalFont));
+            headerNumero.setBorder(Rectangle.BOX);
+            headerNumero.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerNumero.setPadding(2f);
+            headerNumero.setBackgroundColor(headerBgColor);
+
+            //TODO: --------------- SE AGREGA TODO EL CONTENIDO A LAS 4 COLUMNAS
+            datosNegocioIII.addCell(headerEntidad);
+            datosNegocioIII.addCell(headerDenominacion);
+            datosNegocioIII.addCell(headerFecha);
+            datosNegocioIII.addCell(headerNumero);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT ENTIDAD >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataEntidad = new PdfPCell(new Phrase("CODE WOLF SAC", inputFont));
+            dataEntidad.setBorder(Rectangle.BOX);
+            dataEntidad.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataEntidad.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataEntidad.setPadding(5f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT DENOMINACIÓN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataDenominacion = new PdfPCell(new Phrase("Andree Huamanchumo", inputFont));
+            dataDenominacion.setBorder(Rectangle.BOX);
+            dataDenominacion.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataDenominacion.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataDenominacion.setPadding(5f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT FECHA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataFecha = new PdfPCell(new Phrase("26-02-2025", inputFont));
+            dataFecha.setBorder(Rectangle.BOX);
+            dataFecha.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataFecha.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataFecha.setPadding(5f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT NÚMERO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataNumero = new PdfPCell(new Phrase("158", inputFont));
+            dataNumero.setBorder(Rectangle.BOX);
+            dataNumero.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataNumero.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataNumero.setPadding(5f);
+
+            //TODO: --------------- SE AGREGA TODO EL CONTENIDO A LAS 4 COLUMNAS
+            datosNegocioIII.addCell(dataEntidad);
+            datosNegocioIII.addCell(dataDenominacion);
+            datosNegocioIII.addCell(dataFecha);
+            datosNegocioIII.addCell(dataNumero);
+
+            //todo: se agrega al documento
+            document.add(datosNegocioIII);
+
+            //TODO: ESPACIO VACÍO
+            PdfPTable vacioEspacio = new PdfPTable(1);
+            vacioEspacio.setWidthPercentage(100);
+            PdfPCell vacioContent = new PdfPCell(new Phrase("", normalFont));
+            vacioContent.setBorder(Rectangle.NO_BORDER);
+            vacioContent.setHorizontalAlignment(Element.ALIGN_CENTER);
+            vacioContent.setPaddingTop(3f);
+            vacioContent.setPaddingBottom(3f);
+            vacioEspacio.addCell(vacioContent);
+            document.add(vacioEspacio);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 
