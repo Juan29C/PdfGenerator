@@ -6,6 +6,8 @@ import com.generatorPdf.PDF.Generator.domain.ports.out.PDFServOut;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import org.springframework.stereotype.Component;
+
+import javax.swing.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -377,8 +379,10 @@ public class PdfGeneratorAdapter implements PDFServOut {
             // ===== ENCABEZADO DEL TRÁMITE ===== \\
             addHeader_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
 
+            // === PRIMER CONTENIDO DEL TRÁMITE === \\
             addContentI_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
 
+            addContetII_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
 
             document.close();
         } catch (Exception e) {
@@ -529,6 +533,7 @@ public class PdfGeneratorAdapter implements PDFServOut {
     }
 
     private void addContentI_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws Exception {
+        Font subTitleFont = new Font(Font.HELVETICA, 5, Font.BOLD);
 
         try {
             PdfPTable titleContentI = new PdfPTable(1);
@@ -543,22 +548,24 @@ public class PdfGeneratorAdapter implements PDFServOut {
 
             titleContentI.addCell(titloContent);
             document.add(titleContentI);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        PdfPTable alternativaContentI = new PdfPTable(3);
+        alternativaContentI.setWidthPercentage(100);
+        alternativaContentI.setWidths(new float[]{33.3f, 33.3f, 33.3f});
 
-            PdfPTable alternativaContentI = new PdfPTable(3);
-            alternativaContentI.setWidthPercentage(100);
-            alternativaContentI.setWidths(new float[]{33.3f, 33.3f, 33.3f});
-
+        try {
+            // todo: >>>>>>>>>>>>>>>> COLUMNA 1 <<<<<<<<<<<<<<<<<<<<<<
             PdfPTable columnAlternativa1 = new PdfPTable(1);
             columnAlternativa1.setWidthPercentage(100);
-
-            Font subTitleFont = new Font(Font.HELVETICA, 5, Font.BOLD);
             PdfPCell tituloContentA1 = new PdfPCell(new Phrase("Licencia de funcionamiento", subTitleFont));
             tituloContentA1.setHorizontalAlignment(Element.ALIGN_CENTER);
             tituloContentA1.setPadding(5);
             tituloContentA1.setBorder(Rectangle.NO_BORDER);
             columnAlternativa1.addCell(tituloContentA1);
 
-
+            // todo: >>>>>>>>>>>> COLUMNA 1: fila 1 <<<<<<<<<<<<<<<<<<
             PdfPTable fila2Tabla = new PdfPTable(2);
             fila2Tabla.setWidthPercentage(100);
             fila2Tabla.setWidths(new float[]{50f, 50f});
@@ -634,10 +641,11 @@ public class PdfGeneratorAdapter implements PDFServOut {
             textoPlazo.setPadding(2);
             filaDer2.addCell(textoPlazo);
 
+
+            // todo: >>>>>>>>>>>> COLUMNA 1: fila 2 <<<<<<<<<<<<<<<<<<
             PdfPCell filaDer2Cell = new PdfPCell(filaDer2);
             filaDer2Cell.setBorder(Rectangle.NO_BORDER);
             columnaDerecha.addCell(filaDer2Cell);
-
 
             fila2Tabla.addCell(columnaIzquierda);
             fila2Tabla.addCell(columnaDerecha);
@@ -685,6 +693,8 @@ public class PdfGeneratorAdapter implements PDFServOut {
 
             fila3Tabla.addCell(fila3C2);
 
+            // todo: >>>>>>>>>>>> COLUMNA 1: fila 3 <<<<<<<<<<<<<<<<<<
+
             PdfPCell fila3 = new PdfPCell(fila3Tabla);
             fila3.setBorder(Rectangle.NO_BORDER);
             columnAlternativa1.addCell(fila3);
@@ -729,6 +739,7 @@ public class PdfGeneratorAdapter implements PDFServOut {
 
             fila4Tabla.addCell(fila4C2);
 
+            // todo: >>>>>>>>>>>> COLUMNA 1: fila 4 <<<<<<<<<<<<<<<<<<
             PdfPCell fila4 = new PdfPCell(fila4Tabla);
             fila4.setBorder(Rectangle.NO_BORDER);
             columnAlternativa1.addCell(fila4);
@@ -756,22 +767,347 @@ public class PdfGeneratorAdapter implements PDFServOut {
 
             PdfPCell fila5 = new PdfPCell(fila5Tabla);
             fila5.setBorder(Rectangle.NO_BORDER);
+            fila5.setPaddingBottom(5);
+
             columnAlternativa1.addCell(fila5);
 
             alternativaContentI.addCell(columnAlternativa1);
-
-            PdfPCell emptyCell = new PdfPCell(new Phrase(" "));
-            emptyCell.setBorder(Rectangle.BOX);
-            emptyCell.setFixedHeight(70);
-            alternativaContentI.addCell(emptyCell);
-            alternativaContentI.addCell(emptyCell);
-
             document.add(alternativaContentI);
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            PdfPTable columnAlternativa2 = new PdfPTable(1);
+            columnAlternativa2.setWidthPercentage(100);
+
+            PdfPCell tituloContentA2 = new PdfPCell(new Phrase("Cambios o modificaciones", subTitleFont));
+            tituloContentA2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            tituloContentA2.setPadding(5);
+            tituloContentA2.setBorder(Rectangle.NO_BORDER);
+            columnAlternativa2.addCell(tituloContentA2);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<< COLUMNA 2 - FILA 1 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPTable fila1Tabla = new PdfPTable(2);
+            fila1Tabla.setWidthPercentage(100);
+            fila1Tabla.setWidths(new float[]{10f, 90f});
+
+
+            Image cuadroF1C2 = Image.getInstance("imagen/cuadro-vacío.png");
+            cuadroF1C2.scaleAbsolute(10f, 10f);
+
+            Font normalFont = new Font(Font.HELVETICA, 6, Font.NORMAL);
+
+            PdfPCell fila1C1 = new PdfPCell(cuadroF1C2);
+            fila1C1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            fila1C1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            fila1C1.setBorder(Rectangle.NO_BORDER);
+            fila1C1.setPadding(2);
+
+            PdfPCell fila1C2 = new PdfPCell(new Phrase("Cambio de denominación o nombre comercial de la persona jurídica (solo completar secciones II, III y V)", normalFont));
+            fila1C2.setBorder(Rectangle.NO_BORDER);
+            fila1C2.setPadding(2);
+
+            fila1Tabla.addCell(fila1C1);
+            fila1Tabla.addCell(fila1C2);
+
+            PdfPCell vacia1 = new PdfPCell();
+            vacia1.setBorder(Rectangle.NO_BORDER);
+            vacia1.setPadding(2);
+            PdfPCell texto1 = new PdfPCell(new Phrase("N° de licencia de funcionamiento:", normalFont));
+            texto1.setBorder(Rectangle.NO_BORDER);
+            texto1.setPadding(2);
+            fila1Tabla.addCell(vacia1);
+            fila1Tabla.addCell(texto1);
+
+            PdfPCell vacia2 = new PdfPCell();
+            vacia2.setBorder(Rectangle.NO_BORDER);
+            vacia2.setPadding(2);
+            PdfPCell texto2 = new PdfPCell(new Phrase("...........................................................", normalFont));
+            texto2.setBorder(Rectangle.NO_BORDER);
+            texto2.setPadding(2);
+            fila1Tabla.addCell(vacia2);
+            fila1Tabla.addCell(texto2);
+
+            PdfPCell vacia3 = new PdfPCell();
+            vacia3.setBorder(Rectangle.NO_BORDER);
+            vacia3.setPadding(2);
+            PdfPCell texto3 = new PdfPCell(new Phrase("Indicar nueva denominación o nombre comercial", normalFont));
+            texto3.setBorder(Rectangle.NO_BORDER);
+            texto3.setPadding(2);
+            fila1Tabla.addCell(vacia3);
+            fila1Tabla.addCell(texto3);
+
+            PdfPCell vacia4 = new PdfPCell();
+            vacia4.setBorder(Rectangle.NO_BORDER);
+            vacia4.setPadding(2);
+            PdfPCell texto4 = new PdfPCell(new Phrase("...........................................................", normalFont));
+            texto4.setBorder(Rectangle.NO_BORDER);
+            texto4.setPadding(2);
+            fila1Tabla.addCell(vacia4);
+            fila1Tabla.addCell(texto4);
+
+            PdfPCell fila1 = new PdfPCell(fila1Tabla);
+            fila1.setBorder(Rectangle.NO_BORDER);
+            fila1.setPadding(2);
+
+            columnAlternativa2.addCell(fila1);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<< COLUMNA 2 - FILA 2 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPTable fila2Tabla = new PdfPTable(2);
+            fila2Tabla.setWidthPercentage(100);
+            fila2Tabla.setWidths(new float[]{10f, 90f});
+
+            Image cuadroF2C2 = Image.getInstance("imagen/cuadro-vacío.png");
+            cuadroF2C2.scaleAbsolute(10f, 10f);
+
+            PdfPCell fila2C1 = new PdfPCell(cuadroF2C2);
+            fila2C1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            fila2C1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            fila2C1.setBorder(Rectangle.NO_BORDER);
+            fila2C1.setPadding(2);
+
+            PdfPCell fila2C2 = new PdfPCell(new Phrase("Transferencia de licencia de funcionamiento (Solo completas secciones II, III y IV y adjuntar copia simple de contrato de transferencia)", normalFont));
+            fila2C2.setBorder(Rectangle.NO_BORDER);
+            fila2C2.setPadding(2);
+
+            fila2Tabla.addCell(fila2C1);
+            fila2Tabla.addCell(fila2C2);
+
+            PdfPCell vacia5 = new PdfPCell();
+            vacia5.setBorder(Rectangle.NO_BORDER);
+            vacia5.setPadding(2);
+            PdfPCell texto5 = new PdfPCell(new Phrase("N° de licencia de funcionamiento:", normalFont));
+            texto5.setBorder(Rectangle.NO_BORDER);
+            texto5.setPadding(2);
+            fila2Tabla.addCell(vacia5);
+            fila2Tabla.addCell(texto5);
+
+            PdfPCell vacia6 = new PdfPCell();
+            vacia6.setBorder(Rectangle.NO_BORDER);
+            vacia6.setPadding(2);
+            PdfPCell texto6 = new PdfPCell(new Phrase("...........................................................", normalFont));
+            texto6.setBorder(Rectangle.NO_BORDER);
+            texto6.setPadding(2);
+            fila2Tabla.addCell(vacia6);
+            fila2Tabla.addCell(texto6);
+
+            PdfPCell fila2 = new PdfPCell(fila2Tabla);
+            fila2.setBorder(Rectangle.NO_BORDER);
+            fila2.setPaddingTop(15);
+            columnAlternativa2.addCell(fila2);
+
+            alternativaContentI.addCell(columnAlternativa2);
+            document.add(alternativaContentI);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+
+        try {
+            // TODO: >>>>>>>>>>>>>>>> COLUMNA 3 <<<<<<<<<<<<<<<<<<<<<<
+            PdfPTable columnAlternativa3 = new PdfPTable(1);
+            columnAlternativa3.setWidthPercentage(100);
+
+            PdfPCell tituloContentA3 = new PdfPCell(new Phrase("Otros", subTitleFont));
+            tituloContentA3.setHorizontalAlignment(Element.ALIGN_CENTER);
+            tituloContentA3.setPadding(5);
+            tituloContentA3.setBorder(Rectangle.NO_BORDER);
+            columnAlternativa3.addCell(tituloContentA3);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<< COLUMNA 3 - FILA 1 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPTable fila1Tabla = new PdfPTable(2);
+            fila1Tabla.setWidthPercentage(100);
+            fila1Tabla.setWidths(new float[]{10f, 90f});
+
+            Image cuadroF1C3 = Image.getInstance("imagen/cuadro-vacío.png");
+            cuadroF1C3.scaleAbsolute(10f, 10f);
+
+            Font normalFont = new Font(Font.HELVETICA, 6, Font.NORMAL);
+
+            PdfPCell fila1C1 = new PdfPCell(cuadroF1C3);
+            fila1C1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            fila1C1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            fila1C1.setBorder(Rectangle.NO_BORDER);
+            fila1C1.setPadding(2);
+
+            PdfPCell fila1C2 = new PdfPCell(new Phrase("Cese de actividades (solo completar secciones II, III y V)", normalFont));
+            fila1C2.setBorder(Rectangle.NO_BORDER);
+            fila1C2.setPadding(2);
+
+            fila1Tabla.addCell(fila1C1);
+            fila1Tabla.addCell(fila1C2);
+
+            PdfPCell vacia1 = new PdfPCell();
+            vacia1.setBorder(Rectangle.NO_BORDER);
+            vacia1.setPadding(2);
+            PdfPCell texto1 = new PdfPCell(new Phrase("N° de licencia de funcionamiento:", normalFont));
+            texto1.setBorder(Rectangle.NO_BORDER);
+            texto1.setPadding(2);
+            fila1Tabla.addCell(vacia1);
+            fila1Tabla.addCell(texto1);
+
+            PdfPCell vacia2 = new PdfPCell();
+            vacia2.setBorder(Rectangle.NO_BORDER);
+            vacia2.setPadding(2);
+            PdfPCell texto2 = new PdfPCell(new Phrase("...........................................................", normalFont));
+            texto2.setBorder(Rectangle.NO_BORDER);
+            texto2.setPadding(2);
+            fila1Tabla.addCell(vacia2);
+            fila1Tabla.addCell(texto2);
+
+            PdfPCell fila1 = new PdfPCell(fila1Tabla);
+            fila1.setBorder(Rectangle.NO_BORDER);
+            fila1.setPaddingTop(3);
+
+            columnAlternativa3.addCell(fila1);
+
+
+            //TODO: <<<<<<<<<<<<<<<<<<<< COLUMNA 3 - FILA 2 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+            PdfPTable fila2Tabla = new PdfPTable(2);
+            fila2Tabla.setWidthPercentage(100);
+            fila2Tabla.setWidths(new float[]{10f, 90f});
+
+            Image cuadroF2C3 = Image.getInstance("imagen/cuadro-vacío.png");
+            cuadroF2C3.scaleAbsolute(10f, 10f);
+
+            PdfPCell fila2C1 = new PdfPCell(cuadroF2C3);
+            fila2C1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            fila2C1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            fila2C1.setBorder(Rectangle.NO_BORDER);
+            fila2C1.setPadding(2);
+
+            PdfPCell fila2C2 = new PdfPCell(new Phrase("Otros (especificar)", normalFont));
+            fila2C2.setBorder(Rectangle.NO_BORDER);
+            fila2C2.setPadding(2);
+
+            fila2Tabla.addCell(fila2C1);
+            fila2Tabla.addCell(fila2C2);
+
+            PdfPCell vacia5 = new PdfPCell();
+            vacia5.setBorder(Rectangle.NO_BORDER);
+            vacia5.setPadding(2);
+            PdfPCell texto5 = new PdfPCell(new Phrase("...........................................................", normalFont));
+            texto5.setBorder(Rectangle.NO_BORDER);
+            texto5.setPadding(2);
+            fila2Tabla.addCell(vacia5);
+            fila2Tabla.addCell(texto5);
+
+            PdfPCell fila2 = new PdfPCell(fila2Tabla);
+            fila2.setBorder(Rectangle.NO_BORDER);
+            fila2.setPaddingTop(15);
+            columnAlternativa3.addCell(fila2);
+
+            alternativaContentI.addCell(columnAlternativa3);
+            document.add(alternativaContentI);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            //TODO: ESPACIO VACÍO
+            PdfPTable vacioEspacio = new PdfPTable(1);
+            vacioEspacio.setWidthPercentage(100);
+            Font titleFont = new Font(Font.HELVETICA, 5, Font.BOLD);
+            PdfPCell vacioContent = new PdfPCell(new Phrase("", titleFont));
+            vacioContent.setBorder(Rectangle.NO_BORDER);
+            vacioContent.setHorizontalAlignment(Element.ALIGN_CENTER);
+            vacioContent.setPaddingTop(2f);
+            vacioContent.setPaddingBottom(2f);
+            vacioEspacio.addCell(vacioContent);
+            document.add(vacioEspacio);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
+    private void addContetII_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws  Exception{
+        Font subTitleFont = new Font(Font.HELVETICA, 5, Font.BOLD);
+        Font titleFont = new Font(Font.HELVETICA, 5, Font.BOLD);
+        Font normalFont = new Font(Font.HELVETICA, 5, Font.NORMAL);
+        Font inputFont = new Font(Font.HELVETICA, 7, Font.NORMAL);
+        try {
+            PdfPTable titleContentII = new PdfPTable(1);
+            titleContentII.setWidthPercentage(100);
 
+
+            PdfPCell titloContent = new PdfPCell(new Phrase("II DATOS DEL SOLICITANTE", titleFont));
+            titloContent.setBorder(Rectangle.BOX);
+            titloContent.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titloContent.setPaddingTop(5f);
+            titloContent.setPaddingBottom(5f);
+            titloContent.setBackgroundColor(new GrayColor(0.85f)); // Gris claro
+            titleContentII.addCell(titloContent);
+
+            PdfPCell titleApe_Nom_RS = new PdfPCell(new Phrase("Apellidos y Nombres / Razón Social", normalFont));
+            titleApe_Nom_RS.setBorder(Rectangle.BOX);
+            titleApe_Nom_RS.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titleApe_Nom_RS.setPaddingTop(2f);
+            titleApe_Nom_RS.setPaddingBottom(2f);
+            titleApe_Nom_RS.setBackgroundColor(new GrayColor(0.92f));
+            titleContentII.addCell(titleApe_Nom_RS);
+
+
+            PdfPCell varNombre_RazonSocial = new PdfPCell(new Phrase("CARLOS GILBERTO MOTUPE DE VILLEGAS",inputFont));
+            varNombre_RazonSocial.setBorder(Rectangle.BOX);
+            varNombre_RazonSocial.setHorizontalAlignment(Element.ALIGN_CENTER);
+            varNombre_RazonSocial.setPaddingTop(5f);
+            varNombre_RazonSocial.setPaddingBottom(5f);
+            titleContentII.addCell(varNombre_RazonSocial);
+
+            document.add(titleContentII);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try{
+            PdfPTable datosSolicitanteContent = new PdfPTable(4);
+            datosSolicitanteContent.setWidthPercentage(100);
+            datosSolicitanteContent.setWidths(new float[]{21f, 24f, 30f, 25f});
+
+            PdfPCell titleDNI = new PdfPCell(new Phrase("N° DNI/N° C.E", normalFont));
+            titleDNI.setBorder(Rectangle.BOX);
+            titleDNI.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titleDNI.setPadding(2f);
+            titleDNI.setPaddingBottom(2f);
+            titleDNI.setBackgroundColor(new GrayColor(0.92f));
+            datosSolicitanteContent.addCell(titleDNI);
+
+            PdfPCell titleRUC = new PdfPCell(new Phrase("N° RUC", normalFont ));
+            titleRUC.setBorder(Rectangle.BOX);
+            titleRUC.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titleRUC.setPadding(2f);
+            titleRUC.setPaddingBottom(2f);
+            titleRUC.setBackgroundColor(new GrayColor(0.92f));
+            datosSolicitanteContent.addCell(titleRUC);
+
+            PdfPCell titleTelefono = new PdfPCell(new Phrase("N° Teléfono",normalFont));
+            titleTelefono.setBorder(Rectangle.BOX);
+            titleTelefono.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titleTelefono.setPadding(2f);
+            titleTelefono.setPaddingBottom(2f);
+            titleTelefono.setBackgroundColor(new GrayColor(0.92f));
+            datosSolicitanteContent.addCell(titleTelefono);
+
+
+            PdfPCell titleCorreo = new PdfPCell(new Phrase("Correo electrónico", normalFont));
+            titleCorreo.setBorder(Rectangle.BOX);
+            titleCorreo.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titleCorreo.setPadding(2f);
+            titleCorreo.setPaddingBottom(2f);
+            titleCorreo.setBackgroundColor(new GrayColor(0.92f));
+            datosSolicitanteContent.addCell(titleCorreo);
+
+            document.add(datosSolicitanteContent);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 
 }
