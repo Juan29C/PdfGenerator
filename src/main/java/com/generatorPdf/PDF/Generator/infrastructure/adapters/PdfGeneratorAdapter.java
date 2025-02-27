@@ -7,7 +7,12 @@ import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -390,6 +395,9 @@ public class PdfGeneratorAdapter implements PDFServOut {
 
             // === CUARTO CONTENIDO DEL TRÁMITE === \\
             addContetIV_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
+
+            // === QUINTO CONTENIDO DEL TRÁMITE === \\
+            addContetV_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
 
             document.close();
         } catch (Exception e) {
@@ -1594,9 +1602,271 @@ public class PdfGeneratorAdapter implements PDFServOut {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    private void addContetV_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws  Exception {
+        Font subTitleFont = new Font(Font.HELVETICA, 5, Font.BOLD);
+        Font titleFont = new Font(Font.HELVETICA, 5, Font.BOLD);
+        Font normalFont = new Font(Font.HELVETICA, 5, Font.NORMAL);
+        Font inputFont = new Font(Font.HELVETICA, 7, Font.NORMAL);
+        try {
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< CREACIÓN DE 3 COLUMNAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPTable datosArea_Mapa = new PdfPTable(3);
+            datosArea_Mapa.setWidthPercentage(100);
+            datosArea_Mapa.setWidths(new float[]{35f, 28f, 37f}); //{45f, 8f, 47f})
+            GrayColor headerBgColor = new GrayColor(0.92f);
 
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO ÁREA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerArea = new PdfPCell(new Phrase("Área total solicitada (m\u00B2)", normalFont));
+            headerArea.setBorder(Rectangle.BOX);
+            headerArea.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerArea.setPadding(2f);
+            headerArea.setPaddingTop(4f);
+            headerArea.setBackgroundColor(headerBgColor);
 
+            //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA VACÍA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell vacioContent = new PdfPCell(new Phrase("", normalFont));
+            vacioContent.setBorder(Rectangle.NO_BORDER);
+            vacioContent.setHorizontalAlignment(Element.ALIGN_CENTER);
+            vacioContent.setPaddingTop(3f);
+            vacioContent.setPaddingBottom(3f);
+
+            //TODO: <<<<<<<<<<<<<<<<<<<<<< COLUMNA TÍTULO CROQUIS DE UBICACIÓN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell headerCroquis = new PdfPCell(new Phrase("Croquis de ubicación", normalFont));
+            headerCroquis.setBorder(Rectangle.BOX);
+            headerCroquis.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerCroquis.setPadding(2f);
+            headerCroquis.setBackgroundColor(headerBgColor);
+
+            //TODO: --------------- SE AGREGA TODO EL CONTENIDO A LAS 3 COLUMNAS
+            datosArea_Mapa.addCell(headerArea);
+            datosArea_Mapa.addCell(vacioContent);
+            datosArea_Mapa.addCell(headerCroquis);
+
+            //todo: se agrega al documento
+            document.add(datosArea_Mapa);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            // Creación de la tabla con 3 columnas
+            PdfPTable datosArea_Mapa = new PdfPTable(3);
+            datosArea_Mapa.setWidthPercentage(100);
+            datosArea_Mapa.setWidths(new float[]{35f, 28f, 37f});
+
+            GrayColor headerBgColor = new GrayColor(0.92f);
+
+            // TODO:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< PRIMERA FILA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataArea1 = new PdfPCell(new Phrase("500", inputFont));
+            dataArea1.setBorder(Rectangle.BOX);
+            dataArea1.setFixedHeight(20f);
+            dataArea1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataArea1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            dataArea1.setPadding(5f);
+
+            PdfPCell vacioContent1 = new PdfPCell(new Phrase("", normalFont));
+            vacioContent1.setBorder(Rectangle.NO_BORDER);
+            vacioContent1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            vacioContent1.setPaddingTop(3f);
+            vacioContent1.setPaddingBottom(3f);
+
+            // Extraer coordenadas desde el DTO (Si no tiene, usar coordenadas por defecto)
+            String coordenadas = pdfTramiteLicenciaDoc.getCoordenadasNegocio();
+            if (coordenadas == null || coordenadas.isEmpty()) {
+                coordenadas = "-9.113216,-78.512091"; // Coordenadas de respaldo
+            }
+
+            // Generar imagen del mapa usando las coordenadas
+            Image mapaImage = obtenerImagenMapa(coordenadas);
+
+            // Celda con la imagen del mapa
+            PdfPCell dataCroquisContent = new PdfPCell(mapaImage, true);
+            dataCroquisContent.setBorder(Rectangle.BOX);
+            dataCroquisContent.setHorizontalAlignment(Element.ALIGN_CENTER);
+            dataCroquisContent.setPadding(5f);
+            dataCroquisContent.setFixedHeight(120f);
+            dataCroquisContent.setRowspan(6); // Combina 6 filas en 1 sola celda
+
+            datosArea_Mapa.addCell(dataArea1);
+            datosArea_Mapa.addCell(vacioContent1);
+            datosArea_Mapa.addCell(dataCroquisContent);
+
+            // TODO : <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SEGUNDA FILA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataArea2 = new PdfPCell();
+            dataArea2.setBorder(Rectangle.NO_BORDER);
+            dataArea2.setFixedHeight(20f);
+            dataArea2.setPadding(5f);
+
+            PdfPCell vacioContent2 = new PdfPCell(new Phrase("", normalFont));
+            vacioContent2.setBorder(Rectangle.NO_BORDER);
+            vacioContent2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            vacioContent2.setPaddingTop(3f);
+            vacioContent2.setPaddingBottom(3f);
+
+            datosArea_Mapa.addCell(dataArea2);
+            datosArea_Mapa.addCell(vacioContent2);
+
+            // TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TERCERA FILA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataArea3 = new PdfPCell();
+            dataArea3.setBorder(Rectangle.NO_BORDER);
+            dataArea3.setFixedHeight(20f);
+            dataArea3.setPadding(5f);
+
+            PdfPCell vacioContent3 = new PdfPCell(new Phrase("", normalFont));
+            vacioContent3.setBorder(Rectangle.NO_BORDER);
+            vacioContent3.setHorizontalAlignment(Element.ALIGN_CENTER);
+            vacioContent3.setPaddingTop(3f);
+            vacioContent3.setPaddingBottom(3f);
+
+            datosArea_Mapa.addCell(dataArea3);
+            datosArea_Mapa.addCell(vacioContent3);
+
+            // TODO:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< CUARTA FILA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataArea4 = new PdfPCell();
+            dataArea4.setBorder(Rectangle.NO_BORDER);
+            dataArea4.setFixedHeight(20f);
+            dataArea4.setPadding(5f);
+
+            PdfPCell vacioContent4 = new PdfPCell(new Phrase("", normalFont));
+            vacioContent4.setBorder(Rectangle.NO_BORDER);
+            vacioContent4.setHorizontalAlignment(Element.ALIGN_CENTER);
+            vacioContent4.setPaddingTop(3f);
+            vacioContent4.setPaddingBottom(3f);
+
+            datosArea_Mapa.addCell(dataArea4);
+            datosArea_Mapa.addCell(vacioContent4);
+
+            // TODO:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< QUINTA FILA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataArea5 = new PdfPCell();
+            dataArea5.setBorder(Rectangle.NO_BORDER);
+            dataArea5.setFixedHeight(20f);
+            dataArea5.setPadding(5f);
+
+            PdfPCell vacioContent5 = new PdfPCell(new Phrase("", normalFont));
+            vacioContent5.setBorder(Rectangle.NO_BORDER);
+            vacioContent5.setHorizontalAlignment(Element.ALIGN_CENTER);
+            vacioContent5.setPaddingTop(3f);
+            vacioContent5.setPaddingBottom(3f);
+
+            datosArea_Mapa.addCell(dataArea5);
+            datosArea_Mapa.addCell(vacioContent5);
+
+            // TODO:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SEXTA FILA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            PdfPCell dataArea6 = new PdfPCell();
+            dataArea6.setBorder(Rectangle.NO_BORDER);
+            dataArea6.setFixedHeight(20f);
+            dataArea6.setPadding(5f);
+
+            PdfPCell vacioContent6 = new PdfPCell(new Phrase("", normalFont));
+            vacioContent6.setBorder(Rectangle.NO_BORDER);
+            vacioContent6.setHorizontalAlignment(Element.ALIGN_CENTER);
+            vacioContent6.setPaddingTop(3f);
+            vacioContent6.setPaddingBottom(3f);
+
+            datosArea_Mapa.addCell(dataArea6);
+            datosArea_Mapa.addCell(vacioContent6);
+
+            document.add(datosArea_Mapa);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+//TODO: PRIMER MAPA
+//          private Image obtenerImagenMapa(String coordenadas) throws Exception {
+//        String[] parts = coordenadas.split(",");
+//        String lat = parts[0].trim();
+//        String lng = parts[1].trim();
+//
+//        // URL de OpenStreetMap con Yandex Static Maps (Forzando idioma español y más detalles)
+//        String urlString = "https://static-maps.yandex.ru/1.x/?ll=" + lng + "," + lat +
+//                "&size=600,400&z=15&l=map,trf&pt=" + lng + "," + lat + ",pm2rdm" +
+//                "&lang=es_ES";  // <--- Aquí forzamos el idioma a español
+//
+//        // Descargar imagen
+//        URL url = new URL(urlString);
+//        BufferedImage bufferedImage = ImageIO.read(url);
+//
+//        // Convertir BufferedImage a iText Image
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        ImageIO.write(bufferedImage, "png", baos);
+//        return Image.getInstance(baos.toByteArray());
+//    }
+
+//    private Image obtenerImagenMapa(String coordenadas) throws Exception {
+//        String[] parts = coordenadas.split(",");
+//        String lat = parts[0].trim();
+//        String lng = parts[1].trim();
+//
+//        // URL de StaticMapMaker con OpenStreetMap
+//        String urlString = "https://staticmapmaker.com/map?center=" + lat + "," + lng +
+//                "&zoom=16&size=600x400&maptype=osm";
+//
+//        // Descargar imagen
+//        URL url = new URL(urlString);
+//        BufferedImage bufferedImage = ImageIO.read(url);
+//
+//        // Convertir BufferedImage a iText Image
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        ImageIO.write(bufferedImage, "png", baos);
+//        return Image.getInstance(baos.toByteArray());
+//    }
+
+//    public Image obtenerImagenMapa(String coordenadas) throws Exception {
+//        String[] parts = coordenadas.split(",");
+//        String lat = parts[0].trim();
+//        String lng = parts[1].trim();
+//
+//        // URL de MapTiler Static Maps
+//        String urlString = "https://api.maptiler.com/maps/streets/static/" + lng + "," + lat + ",16/600x400.png?key=YJOIY5jc2yavoEja5rq1" ;
+//
+//        // Descargar la imagen
+//        URL url = new URL(urlString);
+//        BufferedImage bufferedImage = ImageIO.read(url);
+//
+//        if (bufferedImage == null) {
+//            throw new Exception("No se pudo descargar la imagen del mapa.");
+//        }
+//
+//        // Convertir BufferedImage a formato compatible con iText
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        ImageIO.write(bufferedImage, "png", baos);
+//        return Image.getInstance(baos.toByteArray());
+//    }
+
+    public Image obtenerImagenMapa(String coordenadas) throws Exception {
+        String[] parts = coordenadas.split(",");
+        String lat = parts[0].trim();
+        String lng = parts[1].trim();
+
+        // Construir la URL de Google Maps Static con el tamaño adecuado
+        String urlString = "https://maps.googleapis.com/maps/api/staticmap?"
+                + "center=" + URLEncoder.encode(lat + "," + lng, StandardCharsets.UTF_8)
+                + "&zoom=18"  // Aumento el zoom a 20 para mayor detalle
+                + "&size=600x400" // Tamaño ajustado según la celda (47f de 487px es ~228px)
+                + "&maptype=roadmap"
+                + "&markers=color:red%7Clabel:X%7C" + URLEncoder.encode(lat + "," + lng, StandardCharsets.UTF_8)
+                + "&key=AIzaSyB0qLHniH28RRMquPY-LUz7SsAR2e7z93A";
+
+        // Descargar la imagen
+        URL url = new URL(urlString);
+        BufferedImage bufferedImage = ImageIO.read(url);
+
+        if (bufferedImage == null) {
+            throw new Exception("No se pudo descargar la imagen del mapa.");
+        }
+
+        // Convertir BufferedImage a formato compatible con iText
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, "png", baos);
+        Image image = Image.getInstance(baos.toByteArray());
+
+        // Ajustar la imagen para que ocupe exactamente el ancho de la celda
+        image.scaleToFit(228, 120);
+
+        return image;
     }
 
 }
