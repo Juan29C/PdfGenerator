@@ -1,9 +1,10 @@
 package com.generatorPdf.PDF.Generator.infrastructure.adapters;
 
-import com.generatorPdf.PDF.Generator.domain.aggregates.dto.PdfRequest;
+import com.generatorPdf.PDF.Generator.domain.aggregates.dto.*;
 import com.generatorPdf.PDF.Generator.domain.ports.out.PDFServOut;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,6 +15,9 @@ import java.net.URL;
 
 @Component
 public class PdfGeneratorAdapter implements PDFServOut {
+
+    //@Autowired
+    //private ContentLicenciaPdf contentLicenciaPdf;
 
     @Override
     public void createPdf(PdfRequest request, String filePath) {
@@ -27,15 +31,37 @@ public class PdfGeneratorAdapter implements PDFServOut {
             document.open();
 
             // ===== IMAGEN DE FONDO =====
+            //BackgroundLicenciaPdf.addBackgroundImage(writer);
             addBackgroundImage(writer);
 
             // ===== ENCABEZADO =====
+            //HeaderLicenciaPdf.addHeader(document, writer, request);
             addHeader(document, writer, request);
 
             // ===== CONTENIDO =====
+            //contentLicenciaPdf.addContent(document, request);
             addContent(document, request);
 
             // ===== PIE DE PÁGINA =====
+            //FooterLicenciaPdf.addFooter(writer, request);
+            addFooter(writer, request);
+
+            //document.close();
+
+
+            // Agregar segunda página
+            document.newPage();
+
+            // Volver a añadir la imagen de fondo para la segunda página
+            addBackgroundImage(writer);
+
+            // Agregar nuevamente el encabezado
+            addHeader(document, writer, request);
+
+            // Agregar el contenido de la segunda página
+            addSecondPageContent(document, request);
+
+            // Agregar pie de pagina
             addFooter(writer, request);
 
             document.close();
@@ -43,6 +69,93 @@ public class PdfGeneratorAdapter implements PDFServOut {
             throw new RuntimeException("Error al generar el PDF", e);
         }
     }
+
+    private void addSecondPageContent(Document document, PdfRequest request) throws DocumentException {
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA, 12, Font.BOLD);
+        Font valueFont = FontFactory.getFont(FontFactory.TIMES_ROMAN, 12, Font.NORMAL);
+        Font value = FontFactory.getFont(FontFactory.TIMES_ROMAN, 10.5f, Font.NORMAL);
+
+        // Título principal
+        Paragraph title = new Paragraph("Historial de Licencia de Funcionamiento", titleFont);
+        title.setAlignment(Element.ALIGN_LEFT);
+        title.setSpacingAfter(5);
+        document.add(title);
+
+        // Número de licencia y estado
+        Paragraph licenseInfo = new Paragraph("Nro. " + request.getLicencia() + "     Estado: " + request.getEstado(), valueFont);
+        licenseInfo.setAlignment(Element.ALIGN_LEFT);
+        licenseInfo.setSpacingAfter(10);
+        document.add(licenseInfo);
+
+        // Agregar tabla
+        addLicenseHistoryTable(document, request);
+
+        // Agregar sección de nota
+        Paragraph notaTitle = new Paragraph("Nota:", titleFont);
+        notaTitle.setAlignment(Element.ALIGN_LEFT);
+        notaTitle.setSpacingBefore(10);
+        notaTitle.setSpacingAfter(5);
+        document.add(notaTitle);
+
+        Paragraph content = new Paragraph(request.getTextoCumplimiento(), value);
+        content.setAlignment(Element.ALIGN_JUSTIFIED);
+        content.setSpacingAfter(20);
+        document.add(content);
+    }
+
+    private void addLicenseHistoryTable(Document document, PdfRequest request) throws DocumentException {
+        PdfPTable table = new PdfPTable(5); // 5 columnas
+        table.setWidthPercentage(100);
+        table.setSpacingBefore(10);
+
+        // Definir anchos de columnas
+        float[] columnWidths = {2f, 1.5f, 1.5f, 3f, 1f};
+        table.setWidths(columnWidths);
+
+        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Font.BOLD);
+        Font cellFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Font.NORMAL);
+
+        // Encabezados de la tabla
+        String[] headers = {"Resolución Nro", "Fecha", "Nro Orden Tupa", "Procedimiento administrativo", "Extras"};
+        for (String header : headers) {
+            PdfPCell cell = new PdfPCell(new Phrase(header, headerFont));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setBorderWidthTop(1f); // Solo borde superior
+            cell.setBorderWidthBottom(1f); // Solo borde inferior
+            cell.setBorderWidthLeft(0);
+            cell.setBorderWidthRight(0);
+            table.addCell(cell);
+        }
+
+        // Verificar si hay datos
+        if (request.getHistorialLicencias() == null || request.getHistorialLicencias().isEmpty()) {
+            PdfPCell emptyCell = new PdfPCell(new Phrase("No hay historiales asignados aún.", cellFont));
+            emptyCell.setColspan(5);
+            emptyCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            emptyCell.setBorderWidthTop(1f); // Solo borde superior
+            emptyCell.setBorderWidthBottom(1f); // Solo borde inferior
+            emptyCell.setBorderWidthLeft(0);
+            emptyCell.setBorderWidthRight(0);
+            emptyCell.setPadding(10);
+            table.addCell(emptyCell);
+        } else {
+            // Agregar filas de datos desde la solicitud
+            for (HistorialDto item : request.getHistorialLicencias()) {
+                table.addCell(new PdfPCell(new Phrase(item.getNumeroResolucion(), cellFont)));
+                table.addCell(new PdfPCell(new Phrase(String.valueOf(item.getFechaCreacion()), cellFont)));
+                table.addCell(new PdfPCell(new Phrase(item.getOrdenTupaDto().getCodigoOrden(), cellFont)));
+                table.addCell(new PdfPCell(new Phrase(item.getOrdenTupaDto().getProceAdministrativo(), cellFont)));
+                table.addCell(new PdfPCell(new Phrase(item.getUsuarioResponsable(), cellFont)));
+            }
+        }
+
+
+        document.add(table);
+    }
+
+
+
+
 
     private void addBackgroundImage(PdfWriter writer) {
         try {

@@ -1,5 +1,7 @@
 package com.generatorPdf.PDF.Generator.domain.aggregates.dto;
 
+import java.util.List;
+
 public class PdfRequest {
     private String expediente;
     private String resolucion;
@@ -8,6 +10,7 @@ public class PdfRequest {
     private String textoCumplimiento;
     private String titular;
     private String ruc;
+    private String estado;
     private String zonificacion;
     private String nombreComercial;
     private String giro;
@@ -17,6 +20,7 @@ public class PdfRequest {
     private String textoLimites;
     private String logoLocalPath;
     private String qrCodeUrl;
+    private List<HistorialDto> historialLicencias;
 
     public String getTextoCumplimiento() {
         return textoCumplimiento;
@@ -144,6 +148,22 @@ public class PdfRequest {
 
     public void setQrCodeUrl(String qrCodeUrl) {
         this.qrCodeUrl = qrCodeUrl;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public List<HistorialDto> getHistorialLicencias() {
+        return historialLicencias;
+    }
+
+    public void setHistorialLicencias(List<HistorialDto> historialLicencias) {
+        this.historialLicencias = historialLicencias;
     }
 }
 
