@@ -598,7 +598,12 @@ public class PdfGeneratorAdapter implements PDFServOut {
             filaIzq1.setWidths(new float[]{10f, 90f});
             filaIzq1.getDefaultCell().setBorder(Rectangle.NO_BORDER);
 
-            Image cuadro = Image.getInstance("imagen/cuadro-vacío.png");
+            String imagenPath = "imagen/cuadro-vacío.png"; // Imagen por defecto
+            if ("INDETERMINADA".equals(pdfTramiteLicenciaDoc.getFechaEstadoLicencia())) {
+                imagenPath = "imagen/cuadro-marcado.png";
+            }
+
+            Image cuadro = Image.getInstance(imagenPath);
             cuadro.scaleAbsolute(10f, 10f);
 
             PdfPCell checkboxTemporal = new PdfPCell(cuadro);
@@ -631,7 +636,12 @@ public class PdfGeneratorAdapter implements PDFServOut {
             filaDer1.setWidths(new float[]{10f, 90f});
             filaDer1.getDefaultCell().setBorder(Rectangle.NO_BORDER);
 
-            Image cuadro2 = Image.getInstance("imagen/cuadro-vacío.png");
+            String imagenPath2 = "imagen/cuadro-vacío.png";
+            if("TEMPORAL".equals(pdfTramiteLicenciaDoc.getFechaEstadoLicencia())){
+                imagenPath2="imagen/cuadro-marcado.png";
+            }
+
+            Image cuadro2 = Image.getInstance(imagenPath2);
             cuadro2.scaleAbsolute(10f, 10f);
 
             PdfPCell checkboxMundo = new PdfPCell(cuadro2);
@@ -654,7 +664,13 @@ public class PdfGeneratorAdapter implements PDFServOut {
             PdfPTable filaDer2 = new PdfPTable(1);
             filaDer2.setWidthPercentage(100);
 
-            PdfPCell textoPlazo = new PdfPCell(new Phrase("Indicar plazo: " + "......................", normalFont));
+            String txtPlazo= "Indicar plazo: " + "......................";
+
+            if ("TEMPORAL".equals(pdfTramiteLicenciaDoc.getFechaEstadoLicencia())){
+                txtPlazo= "Indicar plazo: "+pdfTramiteLicenciaDoc.getVigenciaLicencia().toString();
+            }
+
+            PdfPCell textoPlazo = new PdfPCell(new Phrase(txtPlazo, normalFont));
             textoPlazo.setBorder(Rectangle.NO_BORDER);
             textoPlazo.setPadding(2);
 
@@ -1080,7 +1096,7 @@ public class PdfGeneratorAdapter implements PDFServOut {
             titleContentII.addCell(titleApe_Nom_RS);
 
 
-            PdfPCell varNombre_RazonSocial = new PdfPCell(new Phrase("CARLOS GILBERTO MOTUPE DE VILLEGAS",inputFont));
+            PdfPCell varNombre_RazonSocial = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getNombreCiudadano()+" "+pdfTramiteLicenciaDoc.getApellidoCiudadano(),inputFont));
             varNombre_RazonSocial.setBorder(Rectangle.BOX);
             varNombre_RazonSocial.setHorizontalAlignment(Element.ALIGN_CENTER);
             varNombre_RazonSocial.setPaddingTop(8f);
@@ -1135,28 +1151,28 @@ public class PdfGeneratorAdapter implements PDFServOut {
             datosSolicitanteContent.addCell(headerCorreo);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT DNI >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataDNI = new PdfPCell(new Phrase("85762413", inputFont));
+            PdfPCell dataDNI = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getDniCiudadano(), inputFont));
             dataDNI.setBorder(Rectangle.BOX);
             dataDNI.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataDNI.setVerticalAlignment(Element.ALIGN_MIDDLE);
             dataDNI.setPadding(8f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT RUC >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataRUC = new PdfPCell(new Phrase("20465795312", inputFont));
+            PdfPCell dataRUC = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getNumeroDocumentoRUC(), inputFont));
             dataRUC.setBorder(Rectangle.BOX);
             dataRUC.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataRUC.setVerticalAlignment(Element.ALIGN_MIDDLE);
             dataRUC.setPadding(8f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT TELÉFONO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataTelefono = new PdfPCell(new Phrase("934323568", inputFont));
+            PdfPCell dataTelefono = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getTelefonoCiudadano(), inputFont));
             dataTelefono.setBorder(Rectangle.BOX);
             dataTelefono.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataTelefono.setVerticalAlignment(Element.ALIGN_MIDDLE);
             dataTelefono.setPadding(8f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT CORREO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataCorreo = new PdfPCell(new Phrase("pedro.anuel@gmail.com", inputFont));
+            PdfPCell dataCorreo = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getCorreoElectronicoCiudadano(), inputFont));
             dataCorreo.setBorder(Rectangle.BOX);
             dataCorreo.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataCorreo.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -1234,28 +1250,28 @@ public class PdfGeneratorAdapter implements PDFServOut {
             datosDireccionSolicitanteContent.addCell(headerProvinciaC);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT Av./Jr./Ca./Pje./Otros >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataAvC = new PdfPCell(new Phrase("Av. Pisco Sour", inputFont));
+            PdfPCell dataAvC = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getAvenidaCiudadano(), inputFont));
             dataAvC.setBorder(Rectangle.BOX);
             dataAvC.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataAvC.setVerticalAlignment(Element.ALIGN_MIDDLE);
             dataAvC.setPadding(8f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT N°/Int./Mz./LL/Otros >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataMzC = new PdfPCell(new Phrase("Mz. Z", inputFont));
+            PdfPCell dataMzC = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getManzanaCiudadano(), inputFont));
             dataMzC.setBorder(Rectangle.BOX);
             dataMzC.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataMzC.setVerticalAlignment(Element.ALIGN_MIDDLE);
             dataMzC.setPadding(8f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT Urb./AA.HH/Otros >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataUrbC = new PdfPCell(new Phrase("Urb. Bellamar", inputFont));
+            PdfPCell dataUrbC = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getUrbanizacionCiudadano(), inputFont));
             dataUrbC.setBorder(Rectangle.BOX);
             dataUrbC.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataUrbC.setVerticalAlignment(Element.ALIGN_MIDDLE);
             dataUrbC.setPadding(8f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT PROVINCIA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataProvinciaC = new PdfPCell(new Phrase("SANTA", inputFont));
+            PdfPCell dataProvinciaC = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getProvinciaCiudadano(), inputFont));
             dataProvinciaC.setBorder(Rectangle.BOX);
             dataProvinciaC.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataProvinciaC.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -1342,26 +1358,42 @@ public class PdfGeneratorAdapter implements PDFServOut {
                 datosSUNARPContent.addCell(headerPartidaSUNARP);
 
                 //TODO: <<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT APELLIDOS Y NOMBRES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                PdfPCell dataApellidoNombre = new PdfPCell(new Phrase("Bruno Emilio Fernandez Messi", inputFont));
+                float spaciado = 12f;
+                String nombreApellidoR="";
+                if(pdfTramiteLicenciaDoc.getNombreRepresentante()!=null && pdfTramiteLicenciaDoc.getApellidoRepresentante()!=null){
+                    nombreApellidoR= pdfTramiteLicenciaDoc.getNombreRepresentante()+" "+pdfTramiteLicenciaDoc.getApellidoRepresentante();
+                    spaciado=8f;
+                }
+                PdfPCell dataApellidoNombre = new PdfPCell(new Phrase(nombreApellidoR, inputFont));
                 dataApellidoNombre.setBorder(Rectangle.BOX);
                 dataApellidoNombre.setHorizontalAlignment(Element.ALIGN_CENTER);
                 dataApellidoNombre.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                dataApellidoNombre.setPadding(8f);
+                dataApellidoNombre.setPadding(spaciado);
 
                 //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT DNI >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                PdfPCell dataDNI = new PdfPCell(new Phrase("72154325", inputFont));
+                String dniR = "";
+                if(pdfTramiteLicenciaDoc.getDniRepresentante()!=null){
+                    dniR = pdfTramiteLicenciaDoc.getDniRepresentante();
+                    spaciado=8f;
+                }
+                PdfPCell dataDNI = new PdfPCell(new Phrase(dniR, inputFont));
                 dataDNI.setBorder(Rectangle.BOX);
                 dataDNI.setHorizontalAlignment(Element.ALIGN_CENTER);
                 dataDNI.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                dataDNI.setPadding(8f);
+                dataDNI.setPadding(spaciado);
 
                 //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT PARTIDA SUNARP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                PdfPCell dataPartidaSUNARP = new PdfPCell(new Phrase("11254", inputFont));
+                String nSunarpR = "";
+                if(pdfTramiteLicenciaDoc.getnSunarp()!=null){
+                    nSunarpR = pdfTramiteLicenciaDoc.getnSunarp();
+                    spaciado=8f;
+                }
+                PdfPCell dataPartidaSUNARP = new PdfPCell(new Phrase(nSunarpR, inputFont));
                 dataPartidaSUNARP.setBorder(Rectangle.BOX);
                 dataPartidaSUNARP.setHorizontalAlignment(Element.ALIGN_CENTER);
                 dataPartidaSUNARP.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
-                dataPartidaSUNARP.setPadding(8f);
+                dataPartidaSUNARP.setPadding(spaciado);
 
                 //TODO: --------------- SE AGREGA TODO EL CONTENIDO A LAS 3 COLUMNAS
                 datosSUNARPContent.addCell(dataApellidoNombre);
@@ -1420,11 +1452,11 @@ public class PdfGeneratorAdapter implements PDFServOut {
             titleContentIV.addCell(titleApe_Nom_RS);
 
 
-            PdfPCell varNombre_RazonSocial = new PdfPCell(new Phrase("LAS OLAS DEL MAR",inputFont));
+            PdfPCell varNombre_RazonSocial = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getNombreNegocio(),inputFont));
             varNombre_RazonSocial.setBorder(Rectangle.BOX);
             varNombre_RazonSocial.setHorizontalAlignment(Element.ALIGN_CENTER);
-            varNombre_RazonSocial.setPaddingTop(5f);
-            varNombre_RazonSocial.setPaddingBottom(5f);
+            varNombre_RazonSocial.setPaddingTop(8f);
+            varNombre_RazonSocial.setPaddingBottom(8f);
             titleContentIV.addCell(varNombre_RazonSocial);
 
             document.add(titleContentIV);
@@ -1474,28 +1506,28 @@ public class PdfGeneratorAdapter implements PDFServOut {
             datosNegocioI.addCell(headerZonificacion);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT CIIU >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataCIIU = new PdfPCell(new Phrase("75824", inputFont));
+            PdfPCell dataCIIU = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getCodigoCiiu(), inputFont));
             dataCIIU.setBorder(Rectangle.BOX);
             dataCIIU.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataCIIU.setVerticalAlignment(Element.ALIGN_MIDDLE);
             dataCIIU.setPadding(8f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT GIROS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataGiro = new PdfPCell(new Phrase("Restaurante", inputFont));
+            PdfPCell dataGiro = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getNombreGiro(), inputFont));
             dataGiro.setBorder(Rectangle.BOX);
             dataGiro.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataGiro.setVerticalAlignment(Element.ALIGN_MIDDLE);
             dataGiro.setPadding(8f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT ACTIVIDAD >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataActividad = new PdfPCell(new Phrase("Venta de platos marinos y bebidas alcoholicas", inputFontEspecial));
+            PdfPCell dataActividad = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getActividadNegocio(), inputFontEspecial));
             dataActividad.setBorder(Rectangle.BOX);
             dataActividad.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataActividad.setVerticalAlignment(Element.ALIGN_MIDDLE);
             dataActividad.setPadding(8f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT ZONIFICACIÓN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataZonificacion = new PdfPCell(new Phrase("ZON-1234", inputFont));
+            PdfPCell dataZonificacion = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getZonificacionNegocio(), inputFont));
             dataZonificacion.setBorder(Rectangle.BOX);
             dataZonificacion.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataZonificacion.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -1565,28 +1597,28 @@ public class PdfGeneratorAdapter implements PDFServOut {
             datosNegocioII.addCell(headerProvincia);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT Av./Jr./Ca./Pje./Otros >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataAv = new PdfPCell(new Phrase("Av. Anchoveta", inputFont));
+            PdfPCell dataAv = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getAvenidaNegocio(), inputFont));
             dataAv.setBorder(Rectangle.BOX);
             dataAv.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataAv.setVerticalAlignment(Element.ALIGN_MIDDLE);
             dataAv.setPadding(8f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT N°/Int./Mz./LL/Otros >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataMz = new PdfPCell(new Phrase("Mz. A", inputFont));
+            PdfPCell dataMz = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getManzanaNegocio(), inputFont));
             dataMz.setBorder(Rectangle.BOX);
             dataMz.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataMz.setVerticalAlignment(Element.ALIGN_MIDDLE);
             dataMz.setPadding(8f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT Urb./AA.HH/Otros >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataUrb = new PdfPCell(new Phrase("Urb. Pacífico", inputFont));
+            PdfPCell dataUrb = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getUrbanizacionNegocio(), inputFont));
             dataUrb.setBorder(Rectangle.BOX);
             dataUrb.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataUrb.setVerticalAlignment(Element.ALIGN_MIDDLE);
             dataUrb.setPadding(8f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT PROVINCIA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataProvincia = new PdfPCell(new Phrase("SANTA", inputFont));
+            PdfPCell dataProvincia = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getProvinciaNegocio(), inputFont));
             dataProvincia.setBorder(Rectangle.BOX);
             dataProvincia.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataProvincia.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -1660,32 +1692,32 @@ public class PdfGeneratorAdapter implements PDFServOut {
             datosNegocioIII.addCell(headerNumero);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT ENTIDAD >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataEntidad = new PdfPCell(new Phrase("CODE WOLF SAC", inputFont));
+            PdfPCell dataEntidad = new PdfPCell(new Phrase("", inputFont));
             dataEntidad.setBorder(Rectangle.BOX);
             dataEntidad.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataEntidad.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            dataEntidad.setPadding(8f);
+            dataEntidad.setPadding(12f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT DENOMINACIÓN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataDenominacion = new PdfPCell(new Phrase("Andree Huamanchumo", inputFont));
+            PdfPCell dataDenominacion = new PdfPCell(new Phrase("", inputFont));
             dataDenominacion.setBorder(Rectangle.BOX);
             dataDenominacion.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataDenominacion.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            dataDenominacion.setPadding(8f);
+            dataDenominacion.setPadding(12f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT FECHA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataFecha = new PdfPCell(new Phrase("26-02-2025", inputFont));
+            PdfPCell dataFecha = new PdfPCell(new Phrase("", inputFont));
             dataFecha.setBorder(Rectangle.BOX);
             dataFecha.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataFecha.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            dataFecha.setPadding(8f);
+            dataFecha.setPadding(12f);
 
             //TODO: <<<<<<<<<<<<<<<<<<<<<<< COLUMNA INPUT NÚMERO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataNumero = new PdfPCell(new Phrase("158", inputFont));
+            PdfPCell dataNumero = new PdfPCell(new Phrase("", inputFont));
             dataNumero.setBorder(Rectangle.BOX);
             dataNumero.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataNumero.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            dataNumero.setPadding(8f);
+            dataNumero.setPadding(12f);
 
             //TODO: --------------- SE AGREGA TODO EL CONTENIDO A LAS 4 COLUMNAS
             datosNegocioIII.addCell(dataEntidad);
@@ -1767,7 +1799,7 @@ public class PdfGeneratorAdapter implements PDFServOut {
             GrayColor headerBgColor = new GrayColor(0.92f);
 
             // TODO:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< PRIMERA FILA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            PdfPCell dataArea1 = new PdfPCell(new Phrase("500", inputFont));
+            PdfPCell dataArea1 = new PdfPCell(new Phrase(pdfTramiteLicenciaDoc.getAreaNegocio().toString(), inputFont));
             dataArea1.setBorder(Rectangle.BOX);
             dataArea1.setFixedHeight(20f);
             dataArea1.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -1780,22 +1812,16 @@ public class PdfGeneratorAdapter implements PDFServOut {
             vacioContent1.setPaddingTop(3f);
             vacioContent1.setPaddingBottom(3f);
 
-            // Extraer coordenadas desde el DTO (Si no tiene, usar coordenadas por defecto)
-            String coordenadas = pdfTramiteLicenciaDoc.getCoordenadasNegocio();
-            if (coordenadas == null || coordenadas.isEmpty()) {
-                coordenadas = "-9.113216,-78.512091"; // Coordenadas de respaldo
-            }
 
-            // Generar imagen del mapa usando las coordenadas
+            String coordenadas = pdfTramiteLicenciaDoc.getCoordenadasNegocio();
             Image mapaImage = obtenerImagenMapa(coordenadas);
 
-            // Celda con la imagen del mapa
             PdfPCell dataCroquisContent = new PdfPCell(mapaImage, true);
             dataCroquisContent.setBorder(Rectangle.BOX);
             dataCroquisContent.setHorizontalAlignment(Element.ALIGN_CENTER);
             dataCroquisContent.setPadding(5f);
             dataCroquisContent.setFixedHeight(120f);
-            dataCroquisContent.setRowspan(6); // Combina 6 filas en 1 sola celda
+            dataCroquisContent.setRowspan(6);
 
             datosArea_Mapa.addCell(dataArea1);
             datosArea_Mapa.addCell(vacioContent1);
@@ -1882,67 +1908,6 @@ public class PdfGeneratorAdapter implements PDFServOut {
             e.printStackTrace();
         }
     }
-//TODO: PRIMER MAPA
-//          private Image obtenerImagenMapa(String coordenadas) throws Exception {
-//        String[] parts = coordenadas.split(",");
-//        String lat = parts[0].trim();
-//        String lng = parts[1].trim();
-//
-//        // URL de OpenStreetMap con Yandex Static Maps (Forzando idioma español y más detalles)
-//        String urlString = "https://static-maps.yandex.ru/1.x/?ll=" + lng + "," + lat +
-//                "&size=600,400&z=15&l=map,trf&pt=" + lng + "," + lat + ",pm2rdm" +
-//                "&lang=es_ES";  // <--- Aquí forzamos el idioma a español
-//
-//        // Descargar imagen
-//        URL url = new URL(urlString);
-//        BufferedImage bufferedImage = ImageIO.read(url);
-//
-//        // Convertir BufferedImage a iText Image
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        ImageIO.write(bufferedImage, "png", baos);
-//        return Image.getInstance(baos.toByteArray());
-//    }
-
-//    private Image obtenerImagenMapa(String coordenadas) throws Exception {
-//        String[] parts = coordenadas.split(",");
-//        String lat = parts[0].trim();
-//        String lng = parts[1].trim();
-//
-//        // URL de StaticMapMaker con OpenStreetMap
-//        String urlString = "https://staticmapmaker.com/map?center=" + lat + "," + lng +
-//                "&zoom=16&size=600x400&maptype=osm";
-//
-//        // Descargar imagen
-//        URL url = new URL(urlString);
-//        BufferedImage bufferedImage = ImageIO.read(url);
-//
-//        // Convertir BufferedImage a iText Image
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        ImageIO.write(bufferedImage, "png", baos);
-//        return Image.getInstance(baos.toByteArray());
-//    }
-
-//    public Image obtenerImagenMapa(String coordenadas) throws Exception {
-//        String[] parts = coordenadas.split(",");
-//        String lat = parts[0].trim();
-//        String lng = parts[1].trim();
-//
-//        // URL de MapTiler Static Maps
-//        String urlString = "https://api.maptiler.com/maps/streets/static/" + lng + "," + lat + ",16/600x400.png?key=YJOIY5jc2yavoEja5rq1" ;
-//
-//        // Descargar la imagen
-//        URL url = new URL(urlString);
-//        BufferedImage bufferedImage = ImageIO.read(url);
-//
-//        if (bufferedImage == null) {
-//            throw new Exception("No se pudo descargar la imagen del mapa.");
-//        }
-//
-//        // Convertir BufferedImage a formato compatible con iText
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        ImageIO.write(bufferedImage, "png", baos);
-//        return Image.getInstance(baos.toByteArray());
-//    }
 
     public Image obtenerImagenMapa(String coordenadas) throws Exception {
         String[] parts = coordenadas.split(",");

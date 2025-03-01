@@ -8,6 +8,7 @@ public class PdfTramiteLicenciaDoc {
     private String fechaEstadoLicencia;
     private String nombreCiudadano;
     private String apellidoCiudadano;
+    private String nombrerazonSocial;
     private String dniCiudadano;
     private String numeroDocumentoRUC;
     private String telefonoCiudadano;
@@ -16,6 +17,14 @@ public class PdfTramiteLicenciaDoc {
     private String manzanaCiudadano;
     private String urbanizacionCiudadano;
     private String provinciaCiudadano;
+
+    //todo: ------- Esto es si es RUC 20 ---------
+    private String apellidoRepresentante;
+    private String nombreRepresentante;
+    private String dniRepresentante;
+    private String nSunarp;
+    //todo: --------------------------------------
+
     private String nombreNegocio;
     private String codigoCiiu;
     private String nombreGiro;
@@ -219,5 +228,46 @@ public class PdfTramiteLicenciaDoc {
 
     public void setPuntoDeclaracion(List<Integer> puntoDeclaracion) {
         this.puntoDeclaracion = puntoDeclaracion;
+    }
+
+
+    public String getNombrerazonSocial() {
+        return nombrerazonSocial;
+    }
+
+    public void setNombrerazonSocial(String nombrerazonSocial) {
+        this.nombrerazonSocial = nombrerazonSocial;
+    }
+
+    public String getApellidoRepresentante() {
+        return apellidoRepresentante;
+    }
+
+    public void setApellidoRepresentante(String apellidoRepresentante) {
+        this.apellidoRepresentante = apellidoRepresentante;
+    }
+
+    public String getNombreRepresentante() {
+        return nombreRepresentante;
+    }
+
+    public void setNombreRepresentanter(String nombreRepresentanter) {
+        this.nombreRepresentante = nombreRepresentanter;
+    }
+
+    public String getDniRepresentante() {
+        return dniRepresentante;
+    }
+
+    public void setDniRepresentante(String dniRepresentante) {
+        this.dniRepresentante = dniRepresentante;
+    }
+
+    public String getnSunarp() {
+        return nSunarp;
+    }
+
+    public void setnSunarp(String nSunarp) {
+        this.nSunarp = nSunarp;
     }
 }
