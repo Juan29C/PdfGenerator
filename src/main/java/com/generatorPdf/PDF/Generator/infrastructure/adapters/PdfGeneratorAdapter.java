@@ -384,8 +384,8 @@ public class PdfGeneratorAdapter implements PDFServOut {
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filePath));
             document.open();
 
-            // ===== ENCABEZADO DEL TRÁMITE ===== \\
-            PdfTramiteLicenciaBuilder.addHeader_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
+            // ===== ENCABEZADO DEL TRÁMITE PAG 1 ===== \\
+            PdfTramiteLicenciaBuilder.addHeader_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc, 1, 2);
 
             // === PRIMER CONTENIDO DEL TRÁMITE === \\
             PdfTramiteLicenciaBuilder.addContentI_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
@@ -397,13 +397,25 @@ public class PdfGeneratorAdapter implements PDFServOut {
             PdfTramiteLicenciaBuilder.addContentII_II_TramiteLicenciaDoc(document,writer,pdfTramiteLicenciaDoc);
 
             // === TERCER CONTENIDO DEL TRÁMITE === \\
-            PdfTramiteLicenciaBuilder.addContetIII_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
+            PdfTramiteLicenciaBuilder.addContentIII_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
 
             // === CUARTO CONTENIDO DEL TRÁMITE === \\
-            PdfTramiteLicenciaBuilder.addContetIV_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
+            PdfTramiteLicenciaBuilder.addContentIV_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
 
             // === QUINTO CONTENIDO DEL TRÁMITE === \\
-            PdfTramiteLicenciaBuilder.addContetV_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
+            PdfTramiteLicenciaBuilder.addContentV_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
+
+
+            document.newPage();
+
+            // ===== ENCABEZADO DEL TRÁMITE PAG 2 ===== \\
+            PdfTramiteLicenciaBuilder.addHeader_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc, 2, 2);
+
+            // === SEXTO CONTENIDO DEL TRÁMITE === \\
+            PdfTramiteLicenciaBuilder.addContentVI_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
+
+            // === SÉPTIMO CONTENIDO DEL TRÁMITE === \\
+            PdfTramiteLicenciaBuilder.addContentVII_TramiteLicenciaDoc(document, writer, pdfTramiteLicenciaDoc);
 
             document.close();
         } catch (Exception e) {

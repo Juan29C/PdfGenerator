@@ -8,13 +8,6 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 public class PdfTramiteLicenciaBuilder {
     static Font boldFont = new Font(Font.HELVETICA, 9, Font.BOLD);
     static Font italicFont = FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 6);
@@ -30,7 +23,7 @@ public class PdfTramiteLicenciaBuilder {
         throw new IllegalStateException("Utility class");
     }
 
-    public static void addHeader_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws Exception {
+    public static void addHeader_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc,  int currentPage, int totalPages) throws Exception {
         PdfPTable headerTable = new PdfPTable(3);
         headerTable.setWidthPercentage(100);
         headerTable.setWidths(new float[]{22f, 46f, 32f});
@@ -87,7 +80,7 @@ public class PdfTramiteLicenciaBuilder {
             subTable.setWidthPercentage(100);
             subTable.setWidths(new float[]{30f, 70f});
 
-            PdfPCell cell2 = new PdfPCell(new Phrase("Página: 1 de 2", normalFont2));
+            PdfPCell cell2 = new PdfPCell(new Phrase("Página: "+ currentPage+" de "+totalPages, normalFont2));
             cell2.setBorder(Rectangle.BOX);
             cell2.setPadding(6);
             cell2.setPaddingLeft(3);
@@ -119,17 +112,19 @@ public class PdfTramiteLicenciaBuilder {
             expedienteContainer.setBorder(Rectangle.BOX);
             headerTable.addCell(expedienteContainer);
 
-            // Pie de página del encabezado
-            PdfPTable footerTable = new PdfPTable(1);
-            footerTable.setWidthPercentage(100);
-            PdfPCell footerCell = new PdfPCell(new Phrase("VER INSTRUCCIONES PARA EL LLENADO (Página 2)", footerFont));
-            footerCell.setBorder(Rectangle.NO_BORDER);
-            footerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            footerCell.setPadding(7f);
-            footerTable.addCell(footerCell);
-
             document.add(headerTable);
-            document.add(footerTable);
+            if (currentPage == 1) {
+                PdfPTable footerTable = new PdfPTable(1);
+                footerTable.setWidthPercentage(100);
+                PdfPCell footerCell = new PdfPCell(new Phrase("VER INSTRUCCIONES PARA EL LLENADO (Página 2)", footerFont));
+                footerCell.setBorder(Rectangle.NO_BORDER);
+                footerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                footerCell.setPadding(7f);
+                footerTable.addCell(footerCell);
+                document.add(footerTable);
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -868,7 +863,7 @@ public class PdfTramiteLicenciaBuilder {
             e.printStackTrace();
         }
     }
-    public static void addContetIII_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws  Exception {
+    public static void addContentIII_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws  Exception {
 
 
         try {
@@ -984,7 +979,8 @@ public class PdfTramiteLicenciaBuilder {
             e.printStackTrace();
         }
     }
-    public static void addContetIV_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws  Exception{
+
+    public static void addContentIV_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws  Exception{
 
         try {
             PdfPTable titleContentIV = new PdfPTable(1);
@@ -1299,7 +1295,7 @@ public class PdfTramiteLicenciaBuilder {
             e.printStackTrace();
         }
     }
-    public static void addContetV_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws  Exception {
+    public static void addContentV_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws  Exception {
 
         try {
             // <<<<<<<<<<<<<<<<<<<<<<<<<<<< CREACIÓN DE 3 COLUMNAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -1459,5 +1455,375 @@ public class PdfTramiteLicenciaBuilder {
             e.printStackTrace();
         }
     }
+
+    public static void addContentVI_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws  Exception{
+        PdfPTable titleContentVI = new PdfPTable(1);
+        titleContentVI.setWidthPercentage(100);
+
+        //<<<<<<<<<<<<<<<<<<<<<<<<ESPACIO VACÍO>>>>>>>>>>>>>>>>>>>>>>>>
+        PdfPCell vacioContent = new PdfPCell(new Phrase("", titleFont));
+        vacioContent.setBorder(Rectangle.NO_BORDER);
+        vacioContent.setHorizontalAlignment(Element.ALIGN_CENTER);
+        vacioContent.setPaddingTop(4f);
+        vacioContent.setPaddingBottom(4f);
+        titleContentVI.addCell(vacioContent);
+
+        PdfPCell titloContent = new PdfPCell(new Phrase("V DECLARACIÓN JURADA", titleFont));
+        titloContent.setBorder(Rectangle.BOX);
+        titloContent.setHorizontalAlignment(Element.ALIGN_CENTER);
+        titloContent.setPaddingTop(5f);
+        titloContent.setPaddingBottom(5f);
+        titloContent.setBackgroundColor(new GrayColor(0.85f)); // Gris claro
+        titleContentVI.addCell(titloContent);
+
+        PdfPCell titleDJ = new PdfPCell(new Phrase("Declaro (DE CORRESPONDER MARCAR CON X)", titleFont));
+        titleDJ.setBorder(Rectangle.BOX);
+        titleDJ.setHorizontalAlignment(Element.ALIGN_LEFT);
+        titleDJ.setPadding(3f);
+        titleDJ.setPaddingLeft(5f);
+        titleDJ.setBackgroundColor(new GrayColor(0.92f));
+        titleContentVI.addCell(titleDJ);
+
+        document.add(titleContentVI);
+
+        PdfPTable contentDJ = new PdfPTable(2);
+        contentDJ.setWidthPercentage(100);
+        contentDJ.setWidths(new float[]{95f, 5f});
+
+        PdfPCell enunciadoDJ1 = new PdfPCell(new Phrase("Cuento con poder suficiente para actuar como representante legal de la persona jurídica conductora (alternativamente, de la persona natural que represento).",normalFont2));
+        enunciadoDJ1.setBorder(Rectangle.BOX);
+        enunciadoDJ1.setHorizontalAlignment(Element.ALIGN_LEFT);
+        enunciadoDJ1.setPadding(5f);
+
+
+        Image marcarC2F1 = Image.getInstance("imagen/cuadro-marcado-se.png");
+        marcarC2F1.scaleAbsolute(20f, 10f);
+
+        PdfPCell marcar1 = new PdfPCell(marcarC2F1);
+        marcar1.setHorizontalAlignment(Element.ALIGN_CENTER);
+        marcar1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        marcar1.setBorder(Rectangle.BOX);
+        marcar1.setPadding(1f);
+
+
+        contentDJ.addCell(enunciadoDJ1);
+        contentDJ.addCell(marcar1);
+
+        PdfPCell enunciadoDJ2 = new PdfPCell(new Phrase("El establecimiento cumple con las condiciones de seguridad en edificaciones y me someto a la inspección técnica que corresponda en función al nivel de riesgo, de conformidad con la legislación aplicable.", normalFont2));
+        enunciadoDJ2.setHorizontalAlignment(Element.ALIGN_LEFT);
+        enunciadoDJ2.setBorder(Rectangle.BOX);
+        enunciadoDJ2.setPadding(5f);
+
+
+        Image marcarC2F2 = Image.getInstance("imagen/cuadro-marcado-se.png");
+        marcarC2F2.scaleAbsolute(20f, 10f);
+
+        PdfPCell marcar2 = new PdfPCell(marcarC2F2);
+        marcar2.setHorizontalAlignment(Element.ALIGN_CENTER);
+        marcar2.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        marcar2.setBorder(Rectangle.BOX);
+        marcar2.setPadding(1f);
+
+        contentDJ.addCell(enunciadoDJ2);
+        contentDJ.addCell(marcar2);
+
+        PdfPCell enunciadoDJ3 = new PdfPCell(new Phrase("Cuento con título profesional vigente y estoy habilitado por el colegio profesional correspondiente (en el caso de servicios relacionados con la salud).", normalFont2));
+        enunciadoDJ3.setHorizontalAlignment(Element.ALIGN_LEFT);
+        enunciadoDJ3.setBorder(Rectangle.BOX);
+        enunciadoDJ3.setPadding(5f);
+
+        Image marcarC2F3 = Image.getInstance("imagen/cuadro-marcado-se.png");
+        marcarC2F3.scaleAbsolute(20f, 10f);
+
+        PdfPCell marcar3 = new PdfPCell(marcarC2F3);
+        marcar3.setHorizontalAlignment(Element.ALIGN_CENTER);
+        marcar3.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        marcar3.setBorder(Rectangle.BOX);
+        marcar3.setPadding(1f);
+
+        contentDJ.addCell(enunciadoDJ3);
+        contentDJ.addCell(marcar3);
+
+        document.add(contentDJ);
+
+
+        PdfPTable filaDJ4 = new PdfPTable(1);
+        filaDJ4.setWidthPercentage(100);
+
+        PdfPCell enunciadoDJ4 = new PdfPCell(new Phrase("Tengo conocimiento de que la presente Declaración Jurada y documentación está sujeta a la fiscalización posterior. En caso de haber proporcionado información, documentos, formatos o declaraciones que no corresponden a la verdad, se me aplicarán las sanciones administrativas y penales correspondientes, declarándose la nulidad o revocatoria de la licencia o autorización otorgada. Asimismo, brindaré las facilidades necesarías para las acciones de control de la autoridad municipal competente.", normalFont2));
+        enunciadoDJ4.setHorizontalAlignment(Element.ALIGN_LEFT);
+        enunciadoDJ4.setBorder(Rectangle.BOX);
+        enunciadoDJ4.setPadding(5f);
+        filaDJ4.addCell(enunciadoDJ4);
+        document.add(filaDJ4);
+
+    }
+
+    public static void addContentVII_TramiteLicenciaDoc(Document document, PdfWriter writer, PdfTramiteLicenciaDoc pdfTramiteLicenciaDoc) throws  Exception{
+
+        PdfPTable titleContentVII = new PdfPTable(1);
+        titleContentVII.setWidthPercentage(100);
+
+        //<<<<<<<<<<<<<<<<<<<<<<<<ESPACIO VACÍO>>>>>>>>>>>>>>>>>>>>>>>>
+        PdfPCell vacioContent = new PdfPCell(new Phrase("", titleFont));
+        vacioContent.setBorder(Rectangle.NO_BORDER);
+        vacioContent.setHorizontalAlignment(Element.ALIGN_CENTER);
+        vacioContent.setPaddingTop(4f);
+        vacioContent.setPaddingBottom(4f);
+        titleContentVII.addCell(vacioContent);
+
+        PdfPCell observacionesContent = new PdfPCell(new Phrase("Observaciones o comentarios del solicitante:", titleFont));
+        observacionesContent.setBorder(Rectangle.BOX);
+        observacionesContent.setHorizontalAlignment(Element.ALIGN_LEFT);
+        observacionesContent.setPadding(3f);
+        observacionesContent.setPaddingLeft(5f);
+        observacionesContent.setFixedHeight(80f);
+        titleContentVII.addCell(observacionesContent);
+
+        titleContentVII.addCell(vacioContent);
+
+        document.add(titleContentVII);
+
+
+
+
+
+
+
+        PdfPTable firmaContent = new PdfPTable(1);
+        firmaContent.setWidthPercentage(100);
+        firmaContent.getDefaultCell().setBorder(Rectangle.BOX);
+        firmaContent.setSpacingBefore(4f);
+        firmaContent.setSpacingAfter(4f);
+
+        PdfPCell fechaTitlePg2 = new PdfPCell(new Phrase("Fecha:", titleFont));
+        fechaTitlePg2.setBorder(Rectangle.TOP | Rectangle.LEFT | Rectangle.RIGHT);
+        fechaTitlePg2.setHorizontalAlignment(Element.ALIGN_LEFT);
+        fechaTitlePg2.setPadding(3f);
+        fechaTitlePg2.setPaddingLeft(5f);
+        fechaTitlePg2.setFixedHeight(50f);
+        firmaContent.addCell(fechaTitlePg2);
+
+        PdfPTable innerTable = new PdfPTable(3);
+        innerTable.setWidthPercentage(100);
+        innerTable.setWidths(new float[]{1, 2, 1});
+
+        PdfPCell emptyCell1 = new PdfPCell(new Phrase(""));
+        emptyCell1.setBorder(Rectangle.NO_BORDER);
+        innerTable.addCell(emptyCell1);
+
+        PdfPTable textTable = new PdfPTable(1);
+        textTable.setWidthPercentage(100);
+
+        PdfPCell lineaCell = new PdfPCell(new Phrase("_____________________________________________________________________", titleFont));
+        lineaCell.setBorder(Rectangle.NO_BORDER);
+        lineaCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        textTable.addCell(lineaCell);
+
+        PdfPCell firmaTxtCell = new PdfPCell(new Phrase("Firma del solicitante / Representante legal / Apoderado", titleFont));
+        firmaTxtCell.setBorder(Rectangle.NO_BORDER);
+        firmaTxtCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        textTable.addCell(firmaTxtCell);
+
+        PdfPCell dniCell = new PdfPCell(new Phrase("DNI:", titleFont));
+        dniCell.setBorder(Rectangle.NO_BORDER);
+        dniCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        dniCell.setPadding(8f);
+        dniCell.setPaddingLeft(30f);
+        textTable.addCell(dniCell);
+
+        PdfPCell nombreApellidoCell = new PdfPCell(new Phrase("Nombres y Apellidos:", titleFont));
+        nombreApellidoCell.setBorder(Rectangle.NO_BORDER);
+        nombreApellidoCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        nombreApellidoCell.setPaddingBottom(8f);
+        nombreApellidoCell.setPaddingLeft(30f);
+        textTable.addCell(nombreApellidoCell);
+
+        PdfPCell nestedTableCell = new PdfPCell(textTable);
+        nestedTableCell.setBorder(Rectangle.NO_BORDER);
+        innerTable.addCell(nestedTableCell);
+
+        PdfPCell emptyCell3 = new PdfPCell(new Phrase(""));
+        emptyCell3.setBorder(Rectangle.NO_BORDER);
+        innerTable.addCell(emptyCell3);
+
+        PdfPCell innerTableCell = new PdfPCell(innerTable);
+        innerTableCell.setBorder(Rectangle.BOTTOM| Rectangle.LEFT | Rectangle.RIGHT);
+        firmaContent.addCell(innerTableCell);
+
+        document.add(firmaContent);
+
+
+
+
+
+        // Espaciado antes del contenido
+        PdfPTable espaciado = new PdfPTable(1);
+        espaciado.setWidthPercentage(100);
+        espaciado.addCell(vacioContent);
+
+        PdfPCell titleVI = new PdfPCell(new Phrase("VI CLASIFICACIÓN DEL NIVEL DE RIESGO (Para ser llenado por el calificador designado de la municipalidad) *", titleFont));
+        titleVI.setBorder(Rectangle.BOX);
+        titleVI.setHorizontalAlignment(Element.ALIGN_CENTER);
+        titleVI.setPaddingTop(5f);
+        titleVI.setPaddingBottom(5f);
+        titleVI.setBackgroundColor(new GrayColor(0.85f)); // Gris claro
+        espaciado.addCell(titleVI);
+
+        document.add(espaciado);
+
+// Contenedor principal
+        PdfPTable clasificacionRiesgoContent = new PdfPTable(1);
+        clasificacionRiesgoContent.setWidthPercentage(100);
+
+// Tabla de cabecera con 4 columnas
+        PdfPTable tablaClasificacionRiesgo = new PdfPTable(4);
+        tablaClasificacionRiesgo.setWidthPercentage(100);
+        tablaClasificacionRiesgo.setWidths(new float[]{1, 1, 1, 1});
+
+        for (String riesgo : new String[]{"ITSE Riesgo bajo", "ITSE Riesgo medio", "ITSE Riesgo alto", "ITSE Riesgo muy alto"}) {
+            PdfPTable tablaRiesgo = new PdfPTable(2);
+            tablaRiesgo.setWidthPercentage(100);
+            tablaRiesgo.setWidths(new float[]{1, 2});
+
+            Image img = Image.getInstance("imagen/cuadro-vacío.png");
+            img.scaleToFit(20, 20);
+            PdfPCell imgCell = new PdfPCell(img);
+            imgCell.setBorder(Rectangle.NO_BORDER);
+            imgCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            imgCell.setPadding(3f);
+            tablaRiesgo.addCell(imgCell);
+
+            PdfPCell textCell = new PdfPCell(new Phrase(riesgo, normalFont2));
+            textCell.setBorder(Rectangle.NO_BORDER);
+            textCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            textCell.setPaddingTop(10f);
+            tablaRiesgo.addCell(textCell);
+
+            PdfPCell cellRiesgo = new PdfPCell(tablaRiesgo);
+            cellRiesgo.setBorder(Rectangle.NO_BORDER);
+            tablaClasificacionRiesgo.addCell(cellRiesgo);
+        }
+
+// Primera tabla con borde superior, izquierdo y derecho
+        PdfPCell celdaTablaClasificacion = new PdfPCell(tablaClasificacionRiesgo);
+        celdaTablaClasificacion.setPaddingTop(8f);
+        celdaTablaClasificacion.setBorder(Rectangle.TOP | Rectangle.LEFT | Rectangle.RIGHT);
+        clasificacionRiesgoContent.addCell(celdaTablaClasificacion);
+
+// Tabla interna para la firma del calificador
+        PdfPTable tablaFirmaCalificador = new PdfPTable(3);
+        tablaFirmaCalificador.setWidthPercentage(100);
+        tablaFirmaCalificador.setWidths(new float[]{1, 2, 1});
+
+// Espacio vacío a la izquierda
+        tablaFirmaCalificador.addCell(new PdfPCell(new Phrase("")) {{ setBorder(Rectangle.NO_BORDER); }});
+
+// Tabla con el texto de firma y sello
+        PdfPTable tablaTextoFirma = new PdfPTable(1);
+        tablaTextoFirma.setWidthPercentage(100);
+
+        tablaTextoFirma.addCell(new PdfPCell(new Phrase("_____________________________________________________________________", titleFont)) {{
+            setPaddingTop(15f);
+            setBorder(Rectangle.NO_BORDER);
+            setHorizontalAlignment(Element.ALIGN_CENTER);
+        }});
+
+        tablaTextoFirma.addCell(new PdfPCell(new Phrase("Firma y sello del calificador municipal", titleFont)) {{
+            setBorder(Rectangle.NO_BORDER);
+            setHorizontalAlignment(Element.ALIGN_CENTER);
+        }});
+
+        tablaTextoFirma.addCell(new PdfPCell(new Phrase("Nombres y Apellidos:", titleFont)) {{
+            setBorder(Rectangle.NO_BORDER);
+            setHorizontalAlignment(Element.ALIGN_LEFT);
+            setPadding(10f);
+            setPaddingLeft(30f);
+        }});
+
+// Se agrega la tabla de texto en el centro de la tabla interna
+        PdfPCell celdaTextoFirma = new PdfPCell(tablaTextoFirma);
+        celdaTextoFirma.setBorder(Rectangle.NO_BORDER);
+        tablaFirmaCalificador.addCell(celdaTextoFirma);
+
+// Espacio vacío a la derecha
+        tablaFirmaCalificador.addCell(new PdfPCell(new Phrase("")) {{ setBorder(Rectangle.NO_BORDER); }});
+
+// Segunda tabla con borde inferior, izquierdo y derecho
+        PdfPCell celdaTablaFirma = new PdfPCell(tablaFirmaCalificador);
+        celdaTablaFirma.setBorder(Rectangle.BOTTOM | Rectangle.LEFT | Rectangle.RIGHT);
+        clasificacionRiesgoContent.addCell(celdaTablaFirma);
+
+// Se agrega la tabla completa al documento
+        document.add(clasificacionRiesgoContent);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

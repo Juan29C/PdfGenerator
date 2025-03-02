@@ -3,7 +3,6 @@ package com.generatorPdf.PDF.Generator.infrastructure.utils;
 import com.lowagie.text.Image;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
